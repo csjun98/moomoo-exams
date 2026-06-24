@@ -1,0 +1,634 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>moomoo Platform Features Training Exam</title>
+<style>
+  :root{
+    --bg:#0f1419; --card:#1a2128; --border:#2a333d; --text:#e6edf3; --muted:#8b949e;
+    --brand:#ff6b00; --good:#2ea043; --bad:#f85149; --warn:#d29922;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font:15px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);padding:24px 16px}
+  .wrap{max-width:780px;margin:0 auto}
+  .hero{background:linear-gradient(135deg,#ff6b00 0%,#c04600 100%);padding:28px;border-radius:14px;margin-bottom:24px}
+  .hero h1{margin:0 0 8px;font-size:22px}
+  .hero p{margin:4px 0;font-size:14px;opacity:.95}
+  .meta{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;font-size:13px}
+  .meta span{background:rgba(0,0,0,.25);padding:4px 10px;border-radius:6px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:14px}
+  label.name{display:block;font-weight:600;margin-bottom:8px}
+  input[type=text]{width:100%;padding:10px 12px;background:#0d1117;border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:15px}
+  input[type=text]:focus{outline:none;border-color:var(--brand)}
+  .q{margin-bottom:14px}
+  .q-num{color:var(--brand);font-weight:700;margin-right:6px}
+  .q-text{font-weight:600;margin-bottom:12px;font-size:15px}
+  .opt{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:8px;margin-bottom:6px;cursor:pointer;transition:all .15s;background:#0d1117}
+  .opt:hover{border-color:#3d4651;background:#11181f}
+  .opt input{margin-top:3px;accent-color:var(--brand);cursor:pointer}
+  .opt span{flex:1}
+  .opt.sel{border-color:var(--brand);background:#1f1408}
+  .opt.correct{border-color:var(--good);background:#0d2114}
+  .opt.wrong{border-color:var(--bad);background:#21100d}
+  .opt.reveal-correct{border-color:var(--good)}
+  .explain{margin-top:8px;padding:10px 12px;background:#0d1117;border-left:3px solid var(--brand);border-radius:4px;font-size:13px;color:var(--muted);white-space:pre-wrap}
+  .explain b{color:var(--text)}
+  button{font:inherit;cursor:pointer;border:none;padding:14px 28px;border-radius:10px;font-weight:700;font-size:15px;transition:all .15s}
+  .btn-submit{background:var(--brand);color:#fff;width:100%;margin-top:8px}
+  .btn-submit:hover{background:#e85f00}
+  .btn-submit:disabled{background:#4a3520;cursor:not-allowed}
+  .btn-secondary{background:#21262d;color:var(--text);border:1px solid var(--border);padding:10px 18px;font-size:14px;margin-right:8px}
+  .btn-secondary:hover{background:#2d333b}
+  .result{display:none;padding:28px;border-radius:14px;margin-bottom:20px;text-align:center}
+  .result.pass{background:linear-gradient(135deg,#2ea043 0%,#1a6b2b 100%)}
+  .result.fail{background:linear-gradient(135deg,#f85149 0%,#a01d1d 100%)}
+  .result h2{margin:0 0 8px;font-size:28px}
+  .result .score{font-size:48px;font-weight:800;margin:10px 0;letter-spacing:-1px}
+  .result .verdict{font-size:18px;font-weight:600;opacity:.95}
+  .result .who{font-size:14px;margin-top:8px;opacity:.85}
+  .err-banner{background:#3d1a1a;border:1px solid var(--bad);color:#ffb4b0;padding:12px 16px;border-radius:8px;margin-bottom:14px;display:none}
+  .chapter-head{margin:28px 0 12px;padding:14px 18px;background:linear-gradient(90deg,rgba(255,107,0,.18) 0%,rgba(255,107,0,0) 100%);border-left:4px solid var(--brand);border-radius:8px}
+  .chapter-head:first-of-type{margin-top:8px}
+  .chapter-head .chapter-tag{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.4px;color:var(--brand);display:block;margin-bottom:4px}
+  .chapter-head .chapter-title{font-size:18px;font-weight:700;color:var(--text)}
+  .chapter-head .chapter-meta{font-size:12px;color:var(--muted);margin-top:4px}
+  .tabs{display:flex;gap:8px;margin-bottom:20px}
+  .tab{flex:1;background:#1a2128;border:1px solid var(--border);color:var(--muted);padding:12px 16px;border-radius:10px;font-weight:600;font-size:14px;cursor:pointer;transition:all .15s}
+  .tab:hover:not(.active){background:#21262d;color:var(--text)}
+  .tab.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+  .badge{display:inline-block;background:rgba(0,0,0,.3);padding:2px 9px;border-radius:10px;font-size:12px;margin-left:6px;min-width:22px;text-align:center}
+  .tab.active .badge{background:rgba(255,255,255,.25)}
+  .stats{display:flex;gap:14px;flex-wrap:wrap}
+  .stat{flex:1;min-width:120px;text-align:center;padding:14px;background:#0d1117;border-radius:10px}
+  .stat .num{font-size:28px;font-weight:800;color:var(--brand);display:block;line-height:1.1}
+  .stat .num.good{color:var(--good)} .stat .num.bad{color:var(--bad)}
+  .stat .lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:4px;display:block}
+  table.log{width:100%;border-collapse:collapse;font-size:14px}
+  table.log th{text-align:left;padding:10px 8px;border-bottom:2px solid var(--border);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+  table.log td{padding:10px 8px;border-bottom:1px solid var(--border);vertical-align:middle}
+  table.log tr:hover td{background:#0d1117}
+  table.log td.score{font-weight:700;font-size:15px}
+  .tag-pass{display:inline-block;background:#0d2114;color:#4ec46c;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700;border:1px solid #2ea043}
+  .tag-fail{display:inline-block;background:#21100d;color:#ff8a85;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700;border:1px solid #f85149}
+  .empty{text-align:center;padding:48px 20px;color:var(--muted)}
+  .empty h3{margin:0 0 8px;color:var(--text);font-size:16px}
+  .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  .btn-danger{background:#3d1a1a;color:#ffb4b0;border:1px solid var(--bad);padding:10px 18px;font-size:14px;border-radius:8px;cursor:pointer;font-weight:600}
+  .btn-danger:hover{background:#5a2828}
+  @media print{
+    body{background:#fff;color:#000}
+    .card,.hero,.result,.chapter-head{background:#fff !important;color:#000 !important;border:1px solid #ccc}
+    .btn-submit,button{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <h1>moomoo Platform Features Training Exam</h1>
+    <p>20 multiple-choice questions across 5 chapters &middot; 5 marks each &middot; 100 marks total</p>
+    <p>Pass mark: <b>80/100</b>. You'll see your answers and the correct ones immediately after submission.</p>
+    <div class="meta">
+      <span>Ch 1 &middot; Smart Tools</span>
+      <span>Ch 2 &middot; Orders &amp; Algo</span>
+      <span>Ch 3 &middot; Account &amp; Cash</span>
+      <span>Ch 4 &middot; Research</span>
+      <span>Ch 5 &middot; Special Products</span>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="exam">Take Exam</button>
+    <button class="tab" data-tab="results">Results Log <span class="badge" id="logCount">0</span></button>
+  </div>
+
+  <div id="tab-exam">
+
+    <div class="card">
+      <label class="name" for="name">Your name (required)</label>
+      <input type="text" id="name" placeholder="e.g. John Tan" autocomplete="off">
+    </div>
+
+    <div class="err-banner" id="err"></div>
+
+    <div id="result" class="result"></div>
+
+    <form id="exam"></form>
+
+    <button class="btn-submit" id="submit">Submit exam</button>
+
+    <div id="post" style="display:none;margin-top:16px;text-align:center">
+      <button class="btn-secondary" onclick="copyResult()">Copy result summary</button>
+      <button class="btn-secondary" onclick="window.print()">Print / Save PDF</button>
+      <button class="btn-secondary" onclick="location.reload()">Next taker</button>
+    </div>
+
+  </div>
+
+  <div id="tab-results" style="display:none">
+    <div class="card">
+      <div class="stats">
+        <div class="stat"><span class="num" id="statTotal">0</span><span class="lbl">Total</span></div>
+        <div class="stat"><span class="num good" id="statPass">0</span><span class="lbl">Pass</span></div>
+        <div class="stat"><span class="num bad" id="statFail">0</span><span class="lbl">Fail</span></div>
+        <div class="stat"><span class="num" id="statRate">—</span><span class="lbl">Pass Rate</span></div>
+        <div class="stat"><span class="num" id="statAvg">—</span><span class="lbl">Avg Score</span></div>
+      </div>
+      <div class="actions">
+        <button class="btn-secondary" onclick="exportCSV()">Export CSV</button>
+        <button class="btn-secondary" onclick="copyAllResults()">Copy all results</button>
+        <button class="btn-danger" onclick="clearLog()">Clear log</button>
+      </div>
+    </div>
+    <div class="card" id="logHost"></div>
+  </div>
+
+</div>
+
+<script>
+const CHAPTERS = [
+  { id: 1, title: "Smart Tools & Discovery", subtitle: "Stock Screener, Heatmap, Earnings Calendar, Analyst Ratings" },
+  { id: 2, title: "Conditional Orders & Algo", subtitle: "Conditional triggers, TP/SL preset, extended hours, Algo Trading Studio" },
+  { id: 3, title: "Account Types & Cash Management", subtitle: "Cash vs Margin, Paper Trading, Cash Plus, Pattern Day Trader" },
+  { id: 4, title: "Research & Information Tools", subtitle: "Floating windows, Custom Alerts, News, 牛友圈 Community" },
+  { id: 5, title: "Special Products", subtitle: "IPO subscription, 暗盘 grey market, US Treasuries, crypto exposure" }
+];
+
+const QUESTIONS = [
+  // ---------- Chapter 1: Smart Tools & Discovery ----------
+  {
+    chapter: 1,
+    q: "A client asks you: 'Show me all US stocks with P/E under 15, market cap above $10B, and dividend yield over 3%.' Which moomoo tool is built for this?",
+    options: [
+      "Watchlist (自选股)",
+      "Stock Screener / 选股器",
+      "Heatmap (热力图)",
+      "News Feed"
+    ],
+    answer: 1,
+    explain: "Stock Screener is moomoo's filter tool — pick any combination of fundamental (P/E, P/B, dividend yield, market cap…) and technical (price, volume, indicator-based) conditions and the screener returns the matching universe.\n\nWhy the others don't fit:\n• Watchlist — a static list YOU manually curate; it doesn't filter the market.\n• Heatmap — visualizes already-known stocks (your watchlist or an index) by colour/size; it's not a search tool.\n• News Feed — informational, no filtering on price-data attributes."
+  },
+  {
+    chapter: 1,
+    q: "What does moomoo's Heatmap (热力图) primarily visualize?",
+    options: [
+      "Customer support response times across regions",
+      "The performance of stocks or sectors as colour-coded tiles, sized by market cap (green = up, red = down)",
+      "Real-time order book depth for a single stock",
+      "Trader sentiment polls from the 牛友圈 community"
+    ],
+    answer: 1,
+    explain: "Heatmap is a treemap of the market (or a chosen index / your watchlist). Each tile is a stock, the tile's SIZE = market cap weight, and the COLOUR = today's % change (green up, red down). One glance tells you which mega-caps are moving and whether the day is broad-based or narrowly led.\n\nVery useful for a 30-second 'what's happening' check before answering a 'why is the market down?' question from a client."
+  },
+  {
+    chapter: 1,
+    q: "A client wants ONE screen listing every US stock reporting earnings next week. Which moomoo feature delivers this?",
+    options: [
+      "Heatmap",
+      "Earnings Calendar (财报日历)",
+      "Options Unusual Activity (期权异动)",
+      "Stock Screener"
+    ],
+    answer: 1,
+    explain: "Earnings Calendar lists upcoming earnings dates by day, with company, BMO/AMC timing (Before Market Open / After Market Close), consensus EPS estimate, and prior-quarter comparison. Filterable by index, watchlist, or market.\n\nMostly used by clients running pre-earnings setups (options strangles, post-earnings drift trades) or just avoiding holding a stock through its print."
+  },
+  {
+    chapter: 1,
+    q: "On moomoo, a client sees AAPL has a 'Consensus Buy' rating. What does this typically mean?",
+    options: [
+      "moomoo's own in-house research team is bullish on AAPL",
+      "The MAJORITY of covering Wall Street analysts have rated AAPL Buy or Strong Buy — aggregated by moomoo from a third-party data feed",
+      "AAPL has unusual call-option volume in the past session",
+      "The board of AAPL has recommended shareholders accumulate more shares"
+    ],
+    answer: 1,
+    explain: "Consensus ratings are an AGGREGATE of sell-side analyst calls (think Goldman, JPM, MS, Wedbush…) that moomoo pulls from a research data vendor — NOT moomoo's own opinion. A 'Consensus Buy' means more analysts have Buy/Strong Buy than Hold/Sell.\n\nUseful disclosure to clients: consensus ratings lag actual events and can be heavily influenced by a handful of bullish analysts; treat as one input, not as a recommendation from moomoo."
+  },
+
+  // ---------- Chapter 2: Conditional Orders & Algo ----------
+  {
+    chapter: 2,
+    q: "A client wants: 'IF TSLA crosses $250, THEN place a market BUY order for 100 TSLA.' Which moomoo function handles the IF part?",
+    options: [
+      "Stop order",
+      "Conditional order (条件单) — a trigger condition that fires a child order when met",
+      "Trailing stop",
+      "Cash sweep"
+    ],
+    answer: 1,
+    explain: "Conditional orders pair a TRIGGER condition (price ≥/≤ X, % change, technical-indicator cross, etc.) with a CHILD order to be placed when the trigger fires. Until triggered, the order is dormant and uses no buying power.\n\nWhy not the others:\n• Stop order — a special case (single-direction price trigger) that fires a market order. Works only for the same symbol you'd be trading, not for cross-symbol triggers.\n• Trailing stop — distance-based exit, no entry-side triggering.\n• Cash sweep — unrelated; that's idle-cash money-market mechanism."
+  },
+  {
+    chapter: 2,
+    q: "A client opens a stock position and wants BOTH a take-profit AND a stop-loss attached at the moment of entry, executed automatically. moomoo calls this:",
+    options: [
+      "Conditional order (条件单)",
+      "Take Profit / Stop Loss attached order (止盈止损单 / TP-SL preset)",
+      "Algo Trading Studio strategy",
+      "Trailing stop"
+    ],
+    answer: 1,
+    explain: "TP/SL attached order = a bracket on a position. When you submit the entry, you also pre-set the profit-target price and stop-loss price; the system monitors and triggers whichever fires first (the other is auto-cancelled).\n\nDistinct from a plain conditional order: TP/SL is bound to an existing or just-placed position, with two-leg OCO logic. A bare conditional has only one trigger and one child order."
+  },
+  {
+    chapter: 2,
+    q: "A US-stock client asks: 'Can I place an order during after-hours (4 PM – 8 PM ET)?' The correct response:",
+    options: [
+      "No — all orders are rejected outside of regular hours",
+      "Yes, but ONLY limit orders are accepted in extended hours; market orders are rejected",
+      "Yes, every order type including market orders is accepted",
+      "Only stop and stop-limit orders are accepted"
+    ],
+    answer: 1,
+    explain: "Extended-hours sessions (pre-market 4 AM – 9:30 AM ET, after-hours 4 PM – 8 PM ET) have thinner liquidity and wider spreads, so US brokers including moomoo require LIMIT orders only — this protects clients from getting filled at extreme prices when there's no other side in the book.\n\nAdditional caveats worth flagging to clients:\n• Not all stocks support extended hours.\n• Lower liquidity → orders may sit unfilled.\n• News releases (typically after the close) can move prices sharply; extended hours is where most of the post-earnings reaction happens."
+  },
+  {
+    chapter: 2,
+    q: "Algo Trading Studio (智能策略 / 策略广场) on moomoo is best described as:",
+    options: [
+      "A live chat link to moomoo's proprietary trading desk",
+      "A visual / Python strategy builder that lets users codify rules-based trading without leaving the app",
+      "An auto-investing robo-advisor managed by moomoo's investment team",
+      "A copy-trading feature that mirrors the trades of top users in real time"
+    ],
+    answer: 1,
+    explain: "Algo Trading Studio is a self-service rules engine. Users either drag-drop blocks (no code) or write Python (full control) to define entry/exit logic, then run it on paper or live. Built-in templates cover common patterns: grid trading, RSI mean-reversion, breakout systems, DCA.\n\nWhy the others are wrong (but tempting):\n• moomoo doesn't offer proprietary-desk chat — regulatory firewall.\n• Smart Portfolio (a separate product) is the robo-advisor.\n• Copy-trading exists in some jurisdictions but is a DIFFERENT feature; Algo Studio is rules-based, not follow-based."
+  },
+
+  // ---------- Chapter 3: Account Types & Cash Management ----------
+  {
+    chapter: 3,
+    q: "Which capability is available ONLY in a margin account, not in a cash account?",
+    options: [
+      "Buying US-listed stocks",
+      "Holding USD currency in the account",
+      "Short selling stocks (借券卖空)",
+      "Receiving dividends on holdings"
+    ],
+    answer: 2,
+    explain: "Short selling requires borrowing shares from a securities lender — only the margin account is wired up for that borrow facility. A cash account is purely long-only.\n\nOther margin-only features worth knowing:\n• Buying on leverage (using a margin loan to buy more than your cash).\n• Trading on UNSETTLED funds (in cash accounts, you must wait T+1 for sale proceeds to settle before reusing them, or risk a 'good faith violation').\n• Some advanced options strategies (uncovered calls, spreads with high margin requirement)."
+  },
+  {
+    chapter: 3,
+    q: "moomoo's Paper Trading (模拟交易) lets clients practice with virtual cash. The most important thing to remind them about:",
+    options: [
+      "Virtual orders still use real settlement, just with no real money",
+      "Virtual fills are BEST-CASE (no realistic slippage, instant fills), so live behaviour can differ significantly from paper results",
+      "Paper trading P&L counts toward the US Pattern Day Trader (PDT) threshold",
+      "Paper accounts have no expiry and persist forever"
+    ],
+    answer: 1,
+    explain: "Paper trading is a great onboarding tool, but its fills are too clean: orders typically fill instantly at the last printed price with no slippage or queue priority. Real markets have spreads, queues, partial fills, and gaps that paper doesn't model.\n\nClients who go from 'I'm crushing it on paper' to 'why am I losing on live?' are usually meeting these realities for the first time. Set the expectation up front."
+  },
+  {
+    chapter: 3,
+    q: "A client has idle USD sweeping into Cash Plus / 余额宝-style. He's about to place a buy order — will the cash be available?",
+    options: [
+      "No, he must wait T+1 to redeem the Cash Plus units first",
+      "Yes — the system auto-redeems the needed Cash Plus units at the moment of trade; the swept cash counts as available buying power",
+      "Only for ETF orders; stock orders require manual redemption",
+      "Only after 9:30 AM ET regardless of trade currency"
+    ],
+    answer: 1,
+    explain: "The whole design of brokerage cash-sweep products is that the swept cash remains FUNCTIONALLY LIQUID. When you submit a buy order, the system redeems just enough sweep units (typically same-day, often instantly) to fund the trade. The client doesn't need to manually un-sweep.\n\nIf a client experiences a delay or rejection, the usual cause is a holiday in the underlying money-market fund's calendar, or the order being placed in an exotic currency that the sweep isn't denominated in."
+  },
+  {
+    chapter: 3,
+    q: "The US 'Pattern Day Trader' (PDT) rule, enforced by all US brokers including moomoo, applies when:",
+    options: [
+      "A client holds positions overnight for 5+ consecutive trading days",
+      "A client executes 4+ day-trades (open AND close same stock same day) within 5 business days in a MARGIN account with equity under USD 25,000",
+      "A client trades only in the pre-market session",
+      "A client uses options instead of stocks"
+    ],
+    answer: 1,
+    explain: "PDT is a FINRA rule: 4 or more day-trades in 5 business days in a margin account WHERE equity is below $25,000 = flagged. Once flagged, the account is restricted to no day-trades until equity is restored above $25k, or until the flag is reset (typically once per 180 days at broker's discretion).\n\nKey teaching points:\n• Only MARGIN accounts. Cash accounts can day-trade freely but are limited by T+1 settlement.\n• Counts ROUND-TRIPS — buy-then-sell or sell-short-then-buy-back, same symbol, same day.\n• Equity is measured at PRIOR-DAY CLOSE; mid-day fluctuations don't trigger PDT."
+  },
+
+  // ---------- Chapter 4: Research & Information Tools ----------
+  {
+    chapter: 4,
+    q: "A power-user client wants multiple stock charts visible at once on his laptop without app-switching. Which moomoo feature?",
+    options: [
+      "Stock Screener",
+      "Floating Windows / 浮窗模式 (multi-window mode)",
+      "Heatmap",
+      "Watchlist"
+    ],
+    answer: 1,
+    explain: "moomoo desktop supports detaching charts, order tickets, and data panels into floating windows you can drag across multiple monitors. Popular setup: chart on screen 1, order book / Level 2 on screen 2, news / earnings calendar on screen 3.\n\nMobile has a slimmer 'floating window' for keeping a chart on top of other apps (Android only typically). The general workflow promise: stop tab-juggling."
+  },
+  {
+    chapter: 4,
+    q: "A client wants a phone notification the moment AAPL drops below $180. Which feature?",
+    options: [
+      "Stop order placed at $180",
+      "Custom Alert / 自定义提醒 at $180",
+      "Conditional order with trigger at $180",
+      "Algo Trading Studio script"
+    ],
+    answer: 1,
+    explain: "Custom Alerts send a NOTIFICATION (push, email, or in-app) when a condition is met. They do NOT place any trade — they just inform.\n\nThis is a critical distinction the client needs to grasp:\n• Custom Alert → 'tell me when X happens, I'll decide what to do'\n• Stop order → 'auto-sell when X happens'\n• Conditional order → 'auto-place an order when X happens'\n\nMis-using a Custom Alert as a stop-loss is one of the most common 'I thought you sold me out!' complaints."
+  },
+  {
+    chapter: 4,
+    q: "On moomoo a client wants news for AAPL only (filtering out general market noise). The relevant feature is:",
+    options: [
+      "Individual-stock news feed on the AAPL detail page / watchlist news subscription",
+      "牛友圈 / Community",
+      "Heatmap",
+      "Floating window"
+    ],
+    answer: 0,
+    explain: "Every stock's detail page has a per-symbol news feed pulling from major wire services (Reuters, Bloomberg, MarketWatch, Benzinga, etc.). Add the stock to a watchlist and you can also have 'watchlist news' surfaced together — still per-symbol filtered, just multi-stock.\n\nFor regulated material news (filings, earnings releases), moomoo also tags items by importance so clients can filter out non-material chatter."
+  },
+  {
+    chapter: 4,
+    q: "moomoo's 牛友圈 (Trading Floor / Community) is primarily:",
+    options: [
+      "A regulated investment-advice service backed by moomoo's compliance team",
+      "A social feed where users post trades, ideas, and discussion — informational and user-generated, NOT regulated advice",
+      "A 1-on-1 broker chat where moomoo agents answer trading questions",
+      "A paid premium feature requiring an account-tier upgrade"
+    ],
+    answer: 1,
+    explain: "牛友圈 / Trading Floor is moomoo's user community — think Twitter/X for traders, hosted in-app. Users post their setups, screenshots, opinions, and chat. moomoo also has some sponsored 'KOLs' or featured contributors, but everything posted is USER-GENERATED CONTENT, not regulated advice.\n\nWhen handling client questions, important reminders:\n• Posts there are NOT moomoo's recommendation.\n• Posters may be talking their book.\n• Clients chasing 'community winners' often arrive late."
+  },
+
+  // ---------- Chapter 5: Special Products ----------
+  {
+    chapter: 5,
+    q: "A Malaysian client wants to subscribe to a HK IPO via moomoo using CASH (not margin) financing. Which is TRUE about the subscription cash?",
+    options: [
+      "Subscription cash is debited immediately and frozen until allotment results are released",
+      "Cash is only debited from the account if the client is ultimately allotted shares",
+      "Cash earns money-market interest while frozen for the subscription window",
+      "The cash is wired directly to the issuing company's bank account"
+    ],
+    answer: 0,
+    explain: "Standard mechanic for cash IPO subscriptions:\n1. Subscribe → cash is debited (or frozen) IMMEDIATELY for the full subscription amount.\n2. Wait for the allotment date — usually 5–7 business days.\n3. If allotted partially or not at all, the unused cash is REFUNDED back to the account.\n\nDuring the freeze window the cash earns nothing — that's the opportunity cost of subscribing. Margin IPO financing partly addresses this (you only put up a fraction; broker lends the rest, charging interest only on the loan portion)."
+  },
+  {
+    chapter: 5,
+    q: "For HK IPOs, 暗盘 (dark pool / grey-market) trading lets clients:",
+    options: [
+      "Trade the new IPO anonymously on the regular HKEX exchange the morning before listing",
+      "Trade the new IPO in an OFF-EXCHANGE evening session the DAY BEFORE official listing (T−1), typically 4:15 PM – 6:30 PM HKT, via participating brokers",
+      "Trade pre-IPO equity in private unlisted companies",
+      "Receive a free starter allocation of the IPO as a moomoo loyalty bonus"
+    ],
+    answer: 1,
+    explain: "HK 暗盘 is a unique pre-listing trading session run by brokers (including moomoo and Futubull) the evening before the IPO officially lists on HKEX. Operates roughly 4:15 PM – 6:30 PM HKT on T−1. Participants are restricted to clients who got allotted shares + those willing to trade them via the broker's own dark pool.\n\nUsed mostly by:\n• Allotted holders wanting to flip at the day-before price.\n• Speculators wanting an early price discovery before the official open.\n\nPrices in 暗盘 are often a strong signal for the listing-day open, but liquidity is thinner than the regular session."
+  },
+  {
+    chapter: 5,
+    q: "A conservative client wants 'short-term low-risk USD yield, backed by the US government'. The most direct moomoo product:",
+    options: [
+      "A high-yield corporate bond ETF",
+      "US Treasury bills / notes (国债 / T-bills) — direct purchase via moomoo's bond / fixed-income product",
+      "A meme-stock unusual-options play",
+      "A 3x-leveraged equity ETF"
+    ],
+    answer: 1,
+    explain: "moomoo offers direct purchase of US Treasury securities (T-bills 4-week / 13-week / 26-week / 52-week, and longer-tenor notes/bonds). Yields are auction-determined and are backed by the full faith and credit of the US government — the textbook 'risk-free' rate.\n\nGood fit for clients who want:\n• A cash-equivalent yield (often higher than savings deposits).\n• Predictable maturity / known total return.\n• Zero credit risk concerns.\n\nDistinct from a corporate bond ETF — those have credit risk and intraday price volatility. Distinct from money-market funds — Treasuries are direct holdings of government debt, not a managed fund."
+  },
+  {
+    chapter: 5,
+    q: "A client asks whether he can trade Bitcoin directly via his moomoo securities account (in Malaysia). The accurate answer is:",
+    options: [
+      "Yes — stocks and crypto trade together from the same securities account",
+      "Direct CRYPTO trading is NOT offered through the moomoo securities account in MY; clients CAN, however, gain crypto exposure via US-listed crypto-related stocks/ETFs (e.g. IBIT, COIN, MSTR, MARA)",
+      "Crypto can only be traded via the moomoo physical debit card",
+      "Crypto holdings are auto-bundled into the Cash Plus / sweep product"
+    ],
+    answer: 1,
+    explain: "moomoo's MY-licensed securities entity does NOT offer direct spot crypto. Clients wanting crypto exposure go via the secondary route: US-listed crypto-adjacent equities and ETFs that already trade on the moomoo platform — these include:\n• IBIT, FBTC — spot Bitcoin ETFs\n• ETHE, ETH — spot Ether ETFs\n• COIN — Coinbase (crypto exchange operator)\n• MSTR — MicroStrategy (a BTC treasury proxy)\n• MARA, RIOT, CLSK — Bitcoin miners\n\nNote the jurisdiction caveat: some other moomoo entities (e.g. Futubull HK with the Bullguard licence) do offer direct crypto. Always confirm by client's account jurisdiction before answering."
+  }
+];
+
+// Render: group by chapter, render chapter heading + each question in declared order
+const form = document.getElementById('exam');
+
+let qIdx = 0;
+CHAPTERS.forEach(ch => {
+  const chQs = QUESTIONS.filter(q => q.chapter === ch.id);
+  const head = document.createElement('div');
+  head.className = 'chapter-head';
+  head.innerHTML = '<span class="chapter-tag">Chapter ' + ch.id + '</span>'
+                 + '<div class="chapter-title">' + escapeHtml(ch.title) + '</div>'
+                 + '<div class="chapter-meta">' + escapeHtml(ch.subtitle) + ' &middot; ' + chQs.length + ' questions</div>';
+  form.appendChild(head);
+
+  chQs.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.dataset.qid = qIdx;
+    const qText = document.createElement('div');
+    qText.className = 'q-text';
+    qText.innerHTML = '<span class="q-num">Q' + (qIdx+1) + '.</span>' + escapeHtml(item.q);
+    card.appendChild(qText);
+    item.options.forEach((opt, oi) => {
+      const lbl = document.createElement('label');
+      lbl.className = 'opt';
+      lbl.innerHTML = '<input type="radio" name="q'+qIdx+'" value="'+oi+'"><span>'+escapeHtml(opt)+'</span>';
+      lbl.addEventListener('click', () => {
+        card.querySelectorAll('.opt').forEach(o => o.classList.remove('sel'));
+        lbl.classList.add('sel');
+      });
+      card.appendChild(lbl);
+    });
+    form.appendChild(card);
+    qIdx++;
+  });
+});
+
+function escapeHtml(s){return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+let submitted = false;
+document.getElementById('submit').addEventListener('click', () => {
+  if (submitted) return;
+  const name = document.getElementById('name').value.trim();
+  const err = document.getElementById('err');
+  if (!name) {
+    err.textContent = 'Please enter your name before submitting.';
+    err.style.display = 'block';
+    window.scrollTo({top:0, behavior:'smooth'});
+    return;
+  }
+  const unanswered = [];
+  QUESTIONS.forEach((_, i) => {
+    if (!document.querySelector('input[name="q'+i+'"]:checked')) unanswered.push(i+1);
+  });
+  if (unanswered.length) {
+    err.textContent = 'You missed question(s): ' + unanswered.join(', ') + '. Please answer every question before submitting.';
+    err.style.display = 'block';
+    const first = document.querySelector('[data-qid="'+(unanswered[0]-1)+'"]');
+    if (first) first.scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+  err.style.display = 'none';
+
+  let correctCount = 0;
+  QUESTIONS.forEach((item, i) => {
+    const card = document.querySelector('[data-qid="'+i+'"]');
+    const picked = parseInt(document.querySelector('input[name="q'+i+'"]:checked').value, 10);
+    const opts = card.querySelectorAll('.opt');
+    opts.forEach(o => { o.classList.remove('sel'); o.querySelector('input').disabled = true; });
+    if (picked === item.answer) {
+      correctCount++;
+      opts[picked].classList.add('correct');
+    } else {
+      opts[picked].classList.add('wrong');
+      opts[item.answer].classList.add('reveal-correct','correct');
+    }
+    const ex = document.createElement('div');
+    ex.className = 'explain';
+    ex.innerHTML = '<b>Correct answer:</b> ' + escapeHtml(item.options[item.answer]) + '<br>' + escapeHtml(item.explain);
+    card.appendChild(ex);
+  });
+
+  const score = correctCount * 5;
+  const pass = score >= 80;
+  const res = document.getElementById('result');
+  res.className = 'result ' + (pass ? 'pass' : 'fail');
+  res.innerHTML =
+    '<div class="who">'+escapeHtml(name)+'</div>' +
+    '<div class="score">'+score+' / 100</div>' +
+    '<div class="verdict">'+(pass ? 'PASS' : 'FAIL')+' &middot; '+correctCount+' of 20 correct</div>' +
+    '<div class="who" style="margin-top:6px">'+(pass ? 'Well done!' : 'Pass mark is 80/100. Review the answers below and try again.')+'</div>';
+  res.style.display = 'block';
+
+  window._examResult = {name, score, correctCount, pass, when: new Date().toISOString()};
+  saveResult(window._examResult);
+
+  document.getElementById('submit').style.display = 'none';
+  document.getElementById('post').style.display = 'block';
+  submitted = true;
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+
+function copyResult(){
+  const r = window._examResult;
+  if (!r) return;
+  const txt = 'moomoo Platform Features Training Exam\n'
+    + 'Name: ' + r.name + '\n'
+    + 'Score: ' + r.score + '/100  (' + r.correctCount + '/20 correct)\n'
+    + 'Result: ' + (r.pass ? 'PASS ✅' : 'FAIL ❌') + '\n'
+    + 'Time: ' + r.when;
+  navigator.clipboard.writeText(txt).then(()=>alert('Result copied to clipboard — paste it in chat to send.'),
+    ()=>alert('Copy failed. Please screenshot the result instead.'));
+}
+
+/* ---------- Results Log (localStorage on this device) ---------- */
+
+const LOG_KEY = 'moomoo_exam_platform_log_v1';
+
+function loadLog(){
+  try { return JSON.parse(localStorage.getItem(LOG_KEY) || '[]'); }
+  catch(e){ return []; }
+}
+function writeLog(arr){
+  localStorage.setItem(LOG_KEY, JSON.stringify(arr));
+}
+function saveResult(r){
+  const arr = loadLog();
+  arr.push(r);
+  writeLog(arr);
+  renderLog();
+}
+function fmtDate(iso){
+  const d = new Date(iso);
+  const pad = n => String(n).padStart(2,'0');
+  return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes());
+}
+function renderLog(){
+  const log = loadLog();
+  document.getElementById('logCount').textContent = log.length;
+
+  const total = log.length;
+  const passed = log.filter(r => r.pass).length;
+  const failed = total - passed;
+  const avg = total ? (log.reduce((s,r)=>s+r.score,0)/total).toFixed(1) : '—';
+  const rate = total ? Math.round((passed/total)*100) + '%' : '—';
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statPass').textContent = passed;
+  document.getElementById('statFail').textContent = failed;
+  document.getElementById('statRate').textContent = rate;
+  document.getElementById('statAvg').textContent = avg;
+
+  const host = document.getElementById('logHost');
+  if (!total){
+    host.innerHTML = '<div class="empty"><h3>No submissions yet</h3>Results will appear here as people complete the exam on this device.</div>';
+    return;
+  }
+  let html = '<table class="log"><thead><tr><th>#</th><th>Name</th><th>Score</th><th>Status</th><th>Date / Time</th></tr></thead><tbody>';
+  log.slice().reverse().forEach((r, i) => {
+    html += '<tr>'
+      + '<td>' + (total - i) + '</td>'
+      + '<td>' + escapeHtml(r.name) + '</td>'
+      + '<td class="score">' + r.score + '<span style="color:var(--muted);font-weight:400">/100</span></td>'
+      + '<td>' + (r.pass ? '<span class="tag-pass">PASS</span>' : '<span class="tag-fail">FAIL</span>') + '</td>'
+      + '<td style="color:var(--muted);font-size:13px">' + fmtDate(r.when) + '</td>'
+      + '</tr>';
+  });
+  html += '</tbody></table>';
+  host.innerHTML = html;
+}
+function exportCSV(){
+  const log = loadLog();
+  if (!log.length) { alert('No records to export yet.'); return; }
+  const rows = [['Name','Score','OutOf','Correct','Total','Status','Timestamp']];
+  log.forEach(r => rows.push([r.name, r.score, 100, r.correctCount, 20, r.pass?'PASS':'FAIL', r.when]));
+  const csv = rows.map(row => row.map(cell => {
+    const s = String(cell);
+    return /[",\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s;
+  }).join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const stamp = new Date().toISOString().replace(/[:T]/g,'-').slice(0,16);
+  a.href = url; a.download = 'exam_platform_results_' + stamp + '.csv';
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+}
+function copyAllResults(){
+  const log = loadLog();
+  if (!log.length) { alert('No records to copy yet.'); return; }
+  let txt = 'Platform Features Exam Results — ' + log.length + ' submission' + (log.length===1?'':'s') + '\n';
+  txt += 'Pass mark: 80/100\n\n';
+  log.forEach((r, i) => {
+    txt += (i+1) + '. ' + r.name + ' — ' + r.score + '/100 — ' + (r.pass?'PASS':'FAIL') + '  (' + fmtDate(r.when) + ')\n';
+  });
+  navigator.clipboard.writeText(txt).then(
+    ()=>alert('All results copied to clipboard.'),
+    ()=>alert('Copy failed. Use Export CSV instead.')
+  );
+}
+function clearLog(){
+  const log = loadLog();
+  if (!log.length) { alert('Log is already empty.'); return; }
+  if (!confirm('Permanently delete all ' + log.length + ' result(s) from this device? This cannot be undone.')) return;
+  if (!confirm('Are you absolutely sure? Consider exporting CSV first.')) return;
+  writeLog([]);
+  renderLog();
+}
+
+/* ---------- Tab switching ---------- */
+document.querySelectorAll('.tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const target = btn.dataset.tab;
+    document.getElementById('tab-exam').style.display = (target === 'exam') ? '' : 'none';
+    document.getElementById('tab-results').style.display = (target === 'results') ? '' : 'none';
+    if (target === 'results') renderLog();
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+});
+
+renderLog();
+</script>
+</body>
+</html>

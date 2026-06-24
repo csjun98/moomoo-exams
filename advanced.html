@@ -1,0 +1,590 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>moomoo Advanced Features Training Exam</title>
+<style>
+  :root{
+    --bg:#0f1419; --card:#1a2128; --border:#2a333d; --text:#e6edf3; --muted:#8b949e;
+    --brand:#ff6b00; --good:#2ea043; --bad:#f85149; --warn:#d29922;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font:15px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);padding:24px 16px}
+  .wrap{max-width:780px;margin:0 auto}
+  .hero{background:linear-gradient(135deg,#ff6b00 0%,#c04600 100%);padding:28px;border-radius:14px;margin-bottom:24px}
+  .hero h1{margin:0 0 8px;font-size:22px}
+  .hero p{margin:4px 0;font-size:14px;opacity:.95}
+  .meta{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;font-size:13px}
+  .meta span{background:rgba(0,0,0,.25);padding:4px 10px;border-radius:6px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:14px}
+  label.name{display:block;font-weight:600;margin-bottom:8px}
+  input[type=text]{width:100%;padding:10px 12px;background:#0d1117;border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:15px}
+  input[type=text]:focus{outline:none;border-color:var(--brand)}
+  .q{margin-bottom:14px}
+  .q-num{color:var(--brand);font-weight:700;margin-right:6px}
+  .q-text{font-weight:600;margin-bottom:12px;font-size:15px}
+  .opt{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:8px;margin-bottom:6px;cursor:pointer;transition:all .15s;background:#0d1117}
+  .opt:hover{border-color:#3d4651;background:#11181f}
+  .opt input{margin-top:3px;accent-color:var(--brand);cursor:pointer}
+  .opt span{flex:1}
+  .opt.sel{border-color:var(--brand);background:#1f1408}
+  .opt.correct{border-color:var(--good);background:#0d2114}
+  .opt.wrong{border-color:var(--bad);background:#21100d}
+  .opt.reveal-correct{border-color:var(--good)}
+  .explain{margin-top:8px;padding:10px 12px;background:#0d1117;border-left:3px solid var(--brand);border-radius:4px;font-size:13px;color:var(--muted);white-space:pre-wrap}
+  .explain b{color:var(--text)}
+  button{font:inherit;cursor:pointer;border:none;padding:14px 28px;border-radius:10px;font-weight:700;font-size:15px;transition:all .15s}
+  .btn-submit{background:var(--brand);color:#fff;width:100%;margin-top:8px}
+  .btn-submit:hover{background:#e85f00}
+  .btn-submit:disabled{background:#4a3520;cursor:not-allowed}
+  .btn-secondary{background:#21262d;color:var(--text);border:1px solid var(--border);padding:10px 18px;font-size:14px;margin-right:8px}
+  .btn-secondary:hover{background:#2d333b}
+  .result{display:none;padding:28px;border-radius:14px;margin-bottom:20px;text-align:center}
+  .result.pass{background:linear-gradient(135deg,#2ea043 0%,#1a6b2b 100%)}
+  .result.fail{background:linear-gradient(135deg,#f85149 0%,#a01d1d 100%)}
+  .result h2{margin:0 0 8px;font-size:28px}
+  .result .score{font-size:48px;font-weight:800;margin:10px 0;letter-spacing:-1px}
+  .result .verdict{font-size:18px;font-weight:600;opacity:.95}
+  .result .who{font-size:14px;margin-top:8px;opacity:.85}
+  .err-banner{background:#3d1a1a;border:1px solid var(--bad);color:#ffb4b0;padding:12px 16px;border-radius:8px;margin-bottom:14px;display:none}
+  .section-head{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin:24px 0 10px;font-weight:700}
+  .tabs{display:flex;gap:8px;margin-bottom:20px}
+  .tab{flex:1;background:#1a2128;border:1px solid var(--border);color:var(--muted);padding:12px 16px;border-radius:10px;font-weight:600;font-size:14px;cursor:pointer;transition:all .15s}
+  .tab:hover:not(.active){background:#21262d;color:var(--text)}
+  .tab.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+  .badge{display:inline-block;background:rgba(0,0,0,.3);padding:2px 9px;border-radius:10px;font-size:12px;margin-left:6px;min-width:22px;text-align:center}
+  .tab.active .badge{background:rgba(255,255,255,.25)}
+  .stats{display:flex;gap:14px;flex-wrap:wrap}
+  .stat{flex:1;min-width:120px;text-align:center;padding:14px;background:#0d1117;border-radius:10px}
+  .stat .num{font-size:28px;font-weight:800;color:var(--brand);display:block;line-height:1.1}
+  .stat .num.good{color:var(--good)} .stat .num.bad{color:var(--bad)}
+  .stat .lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:4px;display:block}
+  table.log{width:100%;border-collapse:collapse;font-size:14px}
+  table.log th{text-align:left;padding:10px 8px;border-bottom:2px solid var(--border);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+  table.log td{padding:10px 8px;border-bottom:1px solid var(--border);vertical-align:middle}
+  table.log tr:hover td{background:#0d1117}
+  table.log td.score{font-weight:700;font-size:15px}
+  .tag-pass{display:inline-block;background:#0d2114;color:#4ec46c;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700;border:1px solid #2ea043}
+  .tag-fail{display:inline-block;background:#21100d;color:#ff8a85;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700;border:1px solid #f85149}
+  .empty{text-align:center;padding:48px 20px;color:var(--muted)}
+  .empty h3{margin:0 0 8px;color:var(--text);font-size:16px}
+  .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  .btn-danger{background:#3d1a1a;color:#ffb4b0;border:1px solid var(--bad);padding:10px 18px;font-size:14px;border-radius:8px;cursor:pointer;font-weight:600}
+  .btn-danger:hover{background:#5a2828}
+  @media print{
+    body{background:#fff;color:#000}
+    .card,.hero,.result{background:#fff !important;color:#000 !important;border:1px solid #ccc}
+    .btn-submit,button{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <h1>moomoo Advanced Features Training Exam</h1>
+    <p>20 multiple-choice questions &middot; 5 marks each &middot; 100 marks total</p>
+    <p>Pass mark: <b>80/100</b>. You'll see your answers and the correct ones immediately after submission.</p>
+    <div class="meta">
+      <span>Order Types &middot; 5</span>
+      <span>Currency Exchange &middot; 3</span>
+      <span>Dividends &middot; 4</span>
+      <span>Funds &middot; 4</span>
+      <span>Margin &amp; Financing &middot; 4</span>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="exam">Take Exam</button>
+    <button class="tab" data-tab="results">Results Log <span class="badge" id="logCount">0</span></button>
+  </div>
+
+  <div id="tab-exam">
+
+    <div class="card">
+      <label class="name" for="name">Your name (required)</label>
+      <input type="text" id="name" placeholder="e.g. John Tan" autocomplete="off">
+    </div>
+
+    <div class="err-banner" id="err"></div>
+
+    <div id="result" class="result"></div>
+
+    <form id="exam"></form>
+
+    <button class="btn-submit" id="submit">Submit exam</button>
+
+    <div id="post" style="display:none;margin-top:16px;text-align:center">
+      <button class="btn-secondary" onclick="copyResult()">Copy result summary</button>
+      <button class="btn-secondary" onclick="window.print()">Print / Save PDF</button>
+      <button class="btn-secondary" onclick="location.reload()">Next taker</button>
+    </div>
+
+  </div>
+
+  <div id="tab-results" style="display:none">
+    <div class="card">
+      <div class="stats">
+        <div class="stat"><span class="num" id="statTotal">0</span><span class="lbl">Total</span></div>
+        <div class="stat"><span class="num good" id="statPass">0</span><span class="lbl">Pass</span></div>
+        <div class="stat"><span class="num bad" id="statFail">0</span><span class="lbl">Fail</span></div>
+        <div class="stat"><span class="num" id="statRate">—</span><span class="lbl">Pass Rate</span></div>
+        <div class="stat"><span class="num" id="statAvg">—</span><span class="lbl">Avg Score</span></div>
+      </div>
+      <div class="actions">
+        <button class="btn-secondary" onclick="exportCSV()">Export CSV</button>
+        <button class="btn-secondary" onclick="copyAllResults()">Copy all results</button>
+        <button class="btn-danger" onclick="clearLog()">Clear log</button>
+      </div>
+    </div>
+    <div class="card" id="logHost"></div>
+  </div>
+
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    section: "Order Types",
+    q: "A client wants to buy 100 shares of AAPL 'right now, whatever the current price'. Which order type matches the request?",
+    options: [
+      "Limit order",
+      "Market order",
+      "Stop order",
+      "Stop-limit order"
+    ],
+    answer: 1,
+    explain: "A market order executes immediately at the best available price — exactly the 'fill me now, don't care about the exact price' use case.\n\nWhy the others don't fit:\n• Limit order — only fills at the client's specified price or better; may sit unfilled.\n• Stop order — does nothing until the trigger price is hit; it's a conditional, not an immediate order.\n• Stop-limit order — same trigger logic as stop, but adds a limit cap, making it even less likely to fill instantly."
+  },
+  {
+    q: "A client places a Stop-Limit BUY order with Stop = $105 and Limit = $106. The stock gaps from $104 directly to $108 on overnight news. What happens at the open?",
+    options: [
+      "Order fills at $108 (market) because the stop is triggered",
+      "Order fills at $106 because the limit caps the price",
+      "Order is triggered but does NOT fill, because the market ($108) is above the limit price ($106)",
+      "Order is cancelled automatically"
+    ],
+    answer: 2,
+    explain: "The stop at $105 IS triggered (market crossed it), which 'activates' a limit order at $106. But the live market is already $108 > $106, so the limit cannot fill. The order sits unfilled, waiting for the price to come back down to ≤ $106.\n\nThis is the classic stop-limit risk: in a fast-moving market the order doesn't protect you the way a plain stop (which becomes a market order) would. Clients chasing certainty of fill should use stop-MARKET; clients chasing certainty of price should accept the risk of no fill."
+  },
+  {
+    q: "A client asks: 'If I place a GTC (Good-Till-Cancelled) limit order on a US stock and forget about it, will it really stay open forever?'",
+    options: [
+      "Yes, until the client manually cancels it",
+      "No — it expires at the end of the trading day, just like a Day order",
+      "It stays open up to a broker-set maximum (commonly 90 days on US markets), then auto-cancels",
+      "It rolls forward weekly into a fresh order automatically"
+    ],
+    answer: 2,
+    explain: "'GTC' literally means 'Good Till Cancelled', but every broker caps the lifespan to prevent stale orders sitting on the book indefinitely. On moomoo (and most US brokers) the typical ceiling is around 90 calendar days, after which the order is auto-cancelled. Always remind clients to re-place if they want to keep the order alive past that window."
+  },
+  {
+    q: "A client buys XYZ at $50 and sets a 10% trailing stop (sell). The stock rallies to $80, then pulls back to $73. What is the current STOP TRIGGER price?",
+    options: [
+      "$45 (the original $50 minus 10%)",
+      "$72 (the high-water $80 minus 10%)",
+      "$65.70 (the current $73 minus 10%)",
+      "$80 (locked at the all-time high)"
+    ],
+    answer: 1,
+    explain: "A trailing stop ratchets UP with the high-water mark but never moves DOWN. The high so far is $80, so the trigger is $80 × (1 − 10%) = $72. The current price is $73 — one more dollar of drop and the position closes.\n\nKey teaching point for clients: the 'trail' resets on every new high. It does NOT follow the price back down when the stock pulls back."
+  },
+  {
+    q: "A client wants ONE setup that will: BUY 100 AAPL when price crosses $200, then automatically attach a $190 stop-loss AND a $220 take-profit, where the stop and target cancel each other when one fires. Which order construct does this?",
+    options: [
+      "Three separate orders — there's no way to bundle them",
+      "A bracket-style conditional order (trigger entry + OCO take-profit / stop-loss pair on the exit)",
+      "A single trailing-stop order",
+      "A Margin loan with auto-rebalancing"
+    ],
+    answer: 1,
+    explain: "moomoo supports conditional + bracket order constructs that combine an entry trigger with a paired exit (One-Cancels-Other: TP and SL). When the TP fills, the SL is auto-cancelled, and vice versa.\n\nWhy the others fall short:\n• Three separate orders — would technically work but requires manual cancellation when one fires, and risks accidental double-exit.\n• Trailing stop — only handles ONE exit leg (the stop), with no hard take-profit.\n• Margin loan — unrelated; it's a financing facility, not an order type."
+  },
+  {
+    section: "Currency Exchange (换汇)",
+    q: "A Malaysian client's moomoo cash account holds only MYR. She wants to buy 10 shares of TSLA (USD-denominated). Under default settings on moomoo MY, what does she need to do first?",
+    options: [
+      "Nothing — the system rejects MYR-funded US trades entirely",
+      "Manually convert MYR → USD via the in-app Currency Exchange (换汇) function before placing the trade",
+      "Open a US bank account first",
+      "Apply for a margin loan to cover the USD shortfall"
+    ],
+    answer: 1,
+    explain: "moomoo MY uses sub-accounts per currency. To buy a USD-listed instrument she needs USD buying power, which means converting some MYR to USD first via the Currency Exchange function (换汇 / FX). The conversion uses an interbank-style rate plus a small FX spread.\n\nNote: some accounts can enable AUTO-FX (the system top-up USD at settlement using MYR), but the default is manual conversion. Worth checking each client's account setting before quoting them a workflow."
+  },
+  {
+    q: "When a client confirms a currency exchange (换汇) order on moomoo, the exchange rate used is:",
+    options: [
+      "Locked at the moment the user submits the conversion request (the rate shown is the rate used)",
+      "Locked at end of day (5:00 PM MYT)",
+      "Locked at T+2 settlement using that day's closing reference rate",
+      "A monthly average rate"
+    ],
+    answer: 0,
+    explain: "moomoo's FX is a real-time quote. The rate you see when you click 'Confirm' is the rate you get — no end-of-day re-pricing surprise. (Tiny caveat: if the conversion volume is unusually large the system may pause for re-quote, but for retail-sized conversions the displayed rate is binding.)"
+  },
+  {
+    q: "A Malaysian client holds USD 10,000 worth of Apple shares. Over the next year, AAPL stays exactly flat in USD terms, but USD/MYR moves from 4.50 to 4.20. What is the impact on the MYR-equivalent value of his holdings?",
+    options: [
+      "No change — AAPL is flat, so MYR value is unchanged",
+      "A gain of about 6.7% in MYR",
+      "A loss of about 6.7% in MYR (USD weakened vs MYR)",
+      "A loss of about 30% in MYR"
+    ],
+    answer: 2,
+    explain: "Before: USD 10,000 × 4.50 = MYR 45,000.\nAfter: USD 10,000 × 4.20 = MYR 42,000.\nChange: −MYR 3,000 / MYR 45,000 ≈ −6.67%.\n\nThis is the FX exposure clients often forget about — even when a US stock is flat, currency moves alone can hand them a loss (or windfall) when measured in their home currency. Worth raising in any conversation about long-horizon US-stock holdings funded from MYR."
+  },
+  {
+    section: "Dividends (股息)",
+    q: "A client asks: 'What is the LAST day I can buy MSFT and still receive the upcoming cash dividend?'",
+    options: [
+      "The record date",
+      "The day BEFORE the ex-dividend date",
+      "The day before the payment date",
+      "The declaration date"
+    ],
+    answer: 1,
+    explain: "Two key dates to keep straight:\n• Ex-dividend date — the first day the stock trades WITHOUT the dividend entitlement. Buy on or after this day = no dividend.\n• Record date — the company's shareholder-roster cutoff (usually one business day after ex-date under T+1 settlement).\n\nSo to receive the dividend, the client must buy at the latest the day BEFORE the ex-date (so the trade settles in time and they appear on the record-date roster).\n\nDeclaration date is just when the board announces the dividend — irrelevant to entitlement. Payment date is when cash actually arrives — also irrelevant to entitlement."
+  },
+  {
+    q: "A Malaysian (non-US-resident) client receives a USD 100 GROSS cash dividend from a US-listed stock. How much will he typically receive after US withholding tax?",
+    options: [
+      "USD 100 (no tax — foreign holders are exempt)",
+      "USD 85 (15% treaty rate)",
+      "USD 70 (30% standard non-resident withholding)",
+      "USD 50 (50% punitive rate)"
+    ],
+    answer: 2,
+    explain: "The US default withholding on dividends paid to non-resident aliens is 30%. Some countries get a lower TREATY rate (e.g. 15% for many EU countries with W-8BEN filed), but Malaysia does NOT have a US tax treaty covering dividends, so MY residents pay the full 30%.\n\nThe withholding is automatic at source — moomoo's custodian deducts it before crediting the net amount. Clients should not be surprised when their 'USD 100 dividend' arrives as USD 70."
+  },
+  {
+    q: "What does a DRIP (Dividend Reinvestment Plan) on moomoo automatically do?",
+    options: [
+      "Withholds dividend tax at a higher rate to simplify year-end reporting",
+      "Uses each cash dividend to buy additional (often fractional) shares of the SAME stock, instead of paying cash",
+      "Converts dividends into bond units to reduce equity exposure",
+      "Pays dividends out as moomoo platform reward points"
+    ],
+    answer: 1,
+    explain: "DRIP turns every cash dividend into more shares of the company that paid it — compounding the position automatically, no manual reinvestment needed. moomoo supports fractional reinvestment, so even a small dividend (say USD 3.40) buys 0.0x of a share.\n\nUseful pitch points: zero brokerage cost on the reinvestment, no minimum, and over decades the compounding makes a meaningful difference. Trade-off: client loses the optionality of using the cash for something else."
+  },
+  {
+    q: "A client notices her ADR (American Depositary Receipt) dividend is slightly less than what the underlying foreign company paid out, even after currency conversion. The most likely cause is:",
+    options: [
+      "moomoo's platform fee",
+      "An ADR pass-through fee — a custodial fee (typically USD 0.01–0.05 per ADR per year) charged by the depositary bank, deducted from dividends",
+      "US estate tax withholding",
+      "A timing mismatch between record date and payment date"
+    ],
+    answer: 1,
+    explain: "ADRs are issued by a US depositary bank (e.g. BNY Mellon, JPMorgan, Citi) which holds the underlying foreign shares. The bank charges an annual custodial / pass-through fee, usually USD 0.01–0.05 per ADR. For dividend-paying ADRs this fee is netted out of the dividend; for non-dividend-paying ADRs it's charged as a 'fee event' to the client's cash balance.\n\nIt's a small but real cost clients often don't expect, and it's specific to ADRs — direct foreign-exchange listings don't have it."
+  },
+  {
+    section: "Funds (基金)",
+    q: "The key difference between an ETF and a traditional unit trust / mutual fund is:",
+    options: [
+      "ETFs are inherently riskier",
+      "ETFs trade INTRADAY on an exchange (like a stock) with continuous pricing; unit trusts price ONCE A DAY at NAV",
+      "ETFs are only for institutional investors",
+      "ETFs have zero management fees"
+    ],
+    answer: 1,
+    explain: "Both wrap a basket of holdings, but the wrapper differs:\n• ETF — trades on exchange tick-by-tick, you see a live bid/ask, can use limit / stop / margin orders.\n• Unit trust / mutual fund — orders accumulate during the day and settle at the next NAV strike (usually 4:00 PM local). No intraday price, no order-type flexibility.\n\nETFs typically also have lower expense ratios because no transfer agent overhead, but that's a side-effect — the core distinction is when and how units are priced."
+  },
+  {
+    q: "A money market fund's main purpose for a brokerage client is to:",
+    options: [
+      "Maximize long-term capital gains via equity exposure",
+      "Provide a stable, low-risk place to park idle cash while still earning some yield",
+      "Hedge currency risk on foreign holdings",
+      "Provide leveraged exposure to bonds"
+    ],
+    answer: 1,
+    explain: "Money market funds hold very short-duration, high-quality debt (T-bills, commercial paper, repos) and target a stable NAV (typically USD 1.00). They are NOT for capital growth — they are a 'cash-plus' parking spot that earns slightly more than a savings account with comparably low risk.\n\nIn moomoo's MY context, this is the engine behind cash-sweep / 余额宝-style products that pay yield on otherwise-idle account cash."
+  },
+  {
+    q: "A client asks if she can set up a plan that automatically buys RM 200 of an ETF every month, regardless of price. What is this concept called?",
+    options: [
+      "Dividend Reinvestment Plan (DRIP)",
+      "Dollar-Cost Averaging (DCA) / Regular Savings Plan (定投)",
+      "Margin financing",
+      "Stock lending"
+    ],
+    answer: 1,
+    explain: "Buying a FIXED amount on a FIXED schedule = Dollar-Cost Averaging. The fixed dollar amount means she buys more units when the price is low and fewer when it's high — smoothing out entry cost and removing the 'when should I buy?' decision.\n\nIt's especially useful for new investors and for volatile assets where timing the market is hard. moomoo's RSP / 定投 function automates the recurring purchase."
+  },
+  {
+    q: "moomoo's cash-sweep / 'Cash Plus' style feature earns yield on idle account cash by:",
+    options: [
+      "Lending the cash to other margin traders inside the same broker",
+      "Sweeping the idle cash into a money market fund (or similar short-term cash vehicle) overnight",
+      "Granting interest directly from moomoo's own balance sheet",
+      "Auto-converting cash into cryptocurrency"
+    ],
+    answer: 1,
+    explain: "Cash-sweep features automatically move idle cash into a money-market-fund-style vehicle each day, where it earns the prevailing short-rate (e.g. ~4–5% in a high-rate environment). The cash remains liquid — when the client places a trade, the sweep vehicle is redeemed back into cash before settlement.\n\nThis is NOT a margin lending program (that would expose principal). And it's NOT broker-balance-sheet interest (clients would prefer that, but it's not the structure)."
+  },
+  {
+    section: "Margin & Financing (融资融券)",
+    q: "Initial margin vs. maintenance margin — which definition is correct?",
+    options: [
+      "Initial margin is the ongoing minimum equity; maintenance is what you put up to open the position",
+      "Initial margin is the equity needed to OPEN a margin position; maintenance is the minimum equity required to KEEP it open",
+      "They are different names for the same number",
+      "Initial applies to stocks, maintenance applies only to options"
+    ],
+    answer: 1,
+    explain: "Standard definitions:\n• Initial margin — what you must put up at the moment of opening (e.g. 50% of position value for US Reg-T).\n• Maintenance margin — the minimum equity you must keep AS the position moves. Drop below this and you get a margin call.\n\nMaintenance is always LOWER than initial — otherwise every newly-opened position would trigger an immediate margin call. Common US retail values: initial 50%, maintenance 25%."
+  },
+  {
+    q: "A client buys 100 shares of XYZ at $50, using 50% initial margin (so $2,500 cash + $2,500 margin loan). The maintenance margin is 25%. Roughly what stock price triggers a margin call?",
+    options: [
+      "$25",
+      "$33.33",
+      "$40",
+      "$45"
+    ],
+    answer: 1,
+    explain: "Set up the maintenance equation: equity ÷ market value = 25%.\nEquity at price P = 100P − $2,500 (the loan stays fixed).\nMarket value = 100P.\n\nSolve: (100P − 2,500) / 100P = 0.25\n→ 100P − 2,500 = 25P\n→ 75P = 2,500\n→ P ≈ $33.33\n\nA quick mental shortcut: with 50% initial and 25% maintenance, a margin call lands around a 33% drop. Useful number to memorize when explaining risk to clients."
+  },
+  {
+    q: "A client asks how he can short-sell Apple on moomoo. The mechanical requirement is:",
+    options: [
+      "He needs a long Apple options position first",
+      "moomoo (via its custodian) must borrow the AAPL shares from a securities lender, and the client pays an ongoing borrow fee for as long as the short is open",
+      "He needs to file Form 13F with the SEC himself",
+      "Short-selling just needs a premium-account upgrade — no borrowing involved"
+    ],
+    answer: 1,
+    explain: "Short-selling is mechanically: borrow shares from someone who owns them → sell them in the market → buy them back later → return to the lender. The borrower pays a daily borrow fee (the 'cost-to-borrow rate' or CTB), which can range from <1% per year for liquid mega-caps to 50%+ per year for hard-to-borrow names.\n\nThings to flag to a client interested in shorting:\n• The borrow fee is on top of any margin interest.\n• Hard-to-borrow shares may be recalled at any time, forcing a buy-to-cover.\n• Losses are theoretically unlimited (the stock can keep going up)."
+  },
+  {
+    q: "A Securities Lending / 借券 program offered to clients typically lets the broker pay the client for:",
+    options: [
+      "Allowing the broker to lend out the client's LONG-held shares to short-sellers, in exchange for a share of the borrow-fee revenue",
+      "Allowing the broker to use the client's cash balance for proprietary trading",
+      "Allowing the broker to cast the client's shareholder votes",
+      "Allowing the broker to short the client's holdings against him"
+    ],
+    answer: 0,
+    explain: "Securities lending programs are a way for long-only clients to earn extra yield on shares they're holding anyway. The broker borrows those shares (with the client's permission), lends them to short-sellers, collects the borrow fee, and shares a percentage of that fee back to the client.\n\nThe more in-demand the shares (hard-to-borrow, popular shorts like meme stocks), the more income generated. Trade-offs to disclose:\n• Voting rights are typically transferred to the borrower for the loan period.\n• Lent shares aren't covered by the standard investor-protection scheme while on loan (collateral is posted instead).\n• Client can usually recall the shares at any time, breaking the loan."
+  }
+];
+
+// Fisher-Yates shuffle in place so every taker sees a different question order
+for (let i = QUESTIONS.length - 1; i > 0; i--) {
+  const j = Math.floor(Math.random() * (i + 1));
+  [QUESTIONS[i], QUESTIONS[j]] = [QUESTIONS[j], QUESTIONS[i]];
+}
+
+const form = document.getElementById('exam');
+QUESTIONS.forEach((item, idx) => {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.dataset.qid = idx;
+  const qText = document.createElement('div');
+  qText.className = 'q-text';
+  qText.innerHTML = '<span class="q-num">Q' + (idx+1) + '.</span>' + escapeHtml(item.q);
+  card.appendChild(qText);
+  item.options.forEach((opt, oi) => {
+    const lbl = document.createElement('label');
+    lbl.className = 'opt';
+    lbl.innerHTML = '<input type="radio" name="q'+idx+'" value="'+oi+'"><span>'+escapeHtml(opt)+'</span>';
+    lbl.addEventListener('click', () => {
+      card.querySelectorAll('.opt').forEach(o => o.classList.remove('sel'));
+      lbl.classList.add('sel');
+    });
+    card.appendChild(lbl);
+  });
+  form.appendChild(card);
+});
+
+function escapeHtml(s){return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+let submitted = false;
+document.getElementById('submit').addEventListener('click', () => {
+  if (submitted) return;
+  const name = document.getElementById('name').value.trim();
+  const err = document.getElementById('err');
+  if (!name) {
+    err.textContent = 'Please enter your name before submitting.';
+    err.style.display = 'block';
+    window.scrollTo({top:0, behavior:'smooth'});
+    return;
+  }
+  const unanswered = [];
+  QUESTIONS.forEach((_, i) => {
+    if (!document.querySelector('input[name="q'+i+'"]:checked')) unanswered.push(i+1);
+  });
+  if (unanswered.length) {
+    err.textContent = 'You missed question(s): ' + unanswered.join(', ') + '. Please answer every question before submitting.';
+    err.style.display = 'block';
+    const first = document.querySelector('[data-qid="'+(unanswered[0]-1)+'"]');
+    if (first) first.scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+  err.style.display = 'none';
+
+  let correctCount = 0;
+  QUESTIONS.forEach((item, i) => {
+    const card = document.querySelector('[data-qid="'+i+'"]');
+    const picked = parseInt(document.querySelector('input[name="q'+i+'"]:checked').value, 10);
+    const opts = card.querySelectorAll('.opt');
+    opts.forEach(o => { o.classList.remove('sel'); o.querySelector('input').disabled = true; });
+    if (picked === item.answer) {
+      correctCount++;
+      opts[picked].classList.add('correct');
+    } else {
+      opts[picked].classList.add('wrong');
+      opts[item.answer].classList.add('reveal-correct','correct');
+    }
+    const ex = document.createElement('div');
+    ex.className = 'explain';
+    ex.innerHTML = '<b>Correct answer:</b> ' + escapeHtml(item.options[item.answer]) + '<br>' + escapeHtml(item.explain);
+    card.appendChild(ex);
+  });
+
+  const score = correctCount * 5;
+  const pass = score >= 80;
+  const res = document.getElementById('result');
+  res.className = 'result ' + (pass ? 'pass' : 'fail');
+  res.innerHTML =
+    '<div class="who">'+escapeHtml(name)+'</div>' +
+    '<div class="score">'+score+' / 100</div>' +
+    '<div class="verdict">'+(pass ? 'PASS' : 'FAIL')+' &middot; '+correctCount+' of 20 correct</div>' +
+    '<div class="who" style="margin-top:6px">'+(pass ? 'Well done!' : 'Pass mark is 80/100. Review the answers below and try again.')+'</div>';
+  res.style.display = 'block';
+
+  window._examResult = {name, score, correctCount, pass, when: new Date().toISOString()};
+  saveResult(window._examResult);
+
+  document.getElementById('submit').style.display = 'none';
+  document.getElementById('post').style.display = 'block';
+  submitted = true;
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+
+function copyResult(){
+  const r = window._examResult;
+  if (!r) return;
+  const txt = 'moomoo Advanced Features Training Exam\n'
+    + 'Name: ' + r.name + '\n'
+    + 'Score: ' + r.score + '/100  (' + r.correctCount + '/20 correct)\n'
+    + 'Result: ' + (r.pass ? 'PASS ✅' : 'FAIL ❌') + '\n'
+    + 'Time: ' + r.when;
+  navigator.clipboard.writeText(txt).then(()=>alert('Result copied to clipboard — paste it in chat to send.'),
+    ()=>alert('Copy failed. Please screenshot the result instead.'));
+}
+
+/* ---------- Results Log (localStorage on this device) ---------- */
+
+const LOG_KEY = 'moomoo_exam_advanced_log_v1';
+
+function loadLog(){
+  try { return JSON.parse(localStorage.getItem(LOG_KEY) || '[]'); }
+  catch(e){ return []; }
+}
+function writeLog(arr){
+  localStorage.setItem(LOG_KEY, JSON.stringify(arr));
+}
+function saveResult(r){
+  const arr = loadLog();
+  arr.push(r);
+  writeLog(arr);
+  renderLog();
+}
+function fmtDate(iso){
+  const d = new Date(iso);
+  const pad = n => String(n).padStart(2,'0');
+  return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes());
+}
+function renderLog(){
+  const log = loadLog();
+  document.getElementById('logCount').textContent = log.length;
+
+  const total = log.length;
+  const passed = log.filter(r => r.pass).length;
+  const failed = total - passed;
+  const avg = total ? (log.reduce((s,r)=>s+r.score,0)/total).toFixed(1) : '—';
+  const rate = total ? Math.round((passed/total)*100) + '%' : '—';
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statPass').textContent = passed;
+  document.getElementById('statFail').textContent = failed;
+  document.getElementById('statRate').textContent = rate;
+  document.getElementById('statAvg').textContent = avg;
+
+  const host = document.getElementById('logHost');
+  if (!total){
+    host.innerHTML = '<div class="empty"><h3>No submissions yet</h3>Results will appear here as people complete the exam on this device.</div>';
+    return;
+  }
+  let html = '<table class="log"><thead><tr><th>#</th><th>Name</th><th>Score</th><th>Status</th><th>Date / Time</th></tr></thead><tbody>';
+  log.slice().reverse().forEach((r, i) => {
+    html += '<tr>'
+      + '<td>' + (total - i) + '</td>'
+      + '<td>' + escapeHtml(r.name) + '</td>'
+      + '<td class="score">' + r.score + '<span style="color:var(--muted);font-weight:400">/100</span></td>'
+      + '<td>' + (r.pass ? '<span class="tag-pass">PASS</span>' : '<span class="tag-fail">FAIL</span>') + '</td>'
+      + '<td style="color:var(--muted);font-size:13px">' + fmtDate(r.when) + '</td>'
+      + '</tr>';
+  });
+  html += '</tbody></table>';
+  host.innerHTML = html;
+}
+function exportCSV(){
+  const log = loadLog();
+  if (!log.length) { alert('No records to export yet.'); return; }
+  const rows = [['Name','Score','OutOf','Correct','Total','Status','Timestamp']];
+  log.forEach(r => rows.push([r.name, r.score, 100, r.correctCount, 20, r.pass?'PASS':'FAIL', r.when]));
+  const csv = rows.map(row => row.map(cell => {
+    const s = String(cell);
+    return /[",\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s;
+  }).join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const stamp = new Date().toISOString().replace(/[:T]/g,'-').slice(0,16);
+  a.href = url; a.download = 'exam_advanced_results_' + stamp + '.csv';
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+}
+function copyAllResults(){
+  const log = loadLog();
+  if (!log.length) { alert('No records to copy yet.'); return; }
+  let txt = 'Advanced Features Exam Results — ' + log.length + ' submission' + (log.length===1?'':'s') + '\n';
+  txt += 'Pass mark: 80/100\n\n';
+  log.forEach((r, i) => {
+    txt += (i+1) + '. ' + r.name + ' — ' + r.score + '/100 — ' + (r.pass?'PASS':'FAIL') + '  (' + fmtDate(r.when) + ')\n';
+  });
+  navigator.clipboard.writeText(txt).then(
+    ()=>alert('All results copied to clipboard.'),
+    ()=>alert('Copy failed. Use Export CSV instead.')
+  );
+}
+function clearLog(){
+  const log = loadLog();
+  if (!log.length) { alert('Log is already empty.'); return; }
+  if (!confirm('Permanently delete all ' + log.length + ' result(s) from this device? This cannot be undone.')) return;
+  if (!confirm('Are you absolutely sure? Consider exporting CSV first.')) return;
+  writeLog([]);
+  renderLog();
+}
+
+/* ---------- Tab switching ---------- */
+document.querySelectorAll('.tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const target = btn.dataset.tab;
+    document.getElementById('tab-exam').style.display = (target === 'exam') ? '' : 'none';
+    document.getElementById('tab-results').style.display = (target === 'results') ? '' : 'none';
+    if (target === 'results') renderLog();
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+});
+
+renderLog();
+</script>
+</body>
+</html>

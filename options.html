@@ -1,0 +1,594 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Options & moomoo Product Training Exam</title>
+<style>
+  :root{
+    --bg:#0f1419; --card:#1a2128; --border:#2a333d; --text:#e6edf3; --muted:#8b949e;
+    --brand:#ff6b00; --good:#2ea043; --bad:#f85149; --warn:#d29922;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font:15px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);padding:24px 16px}
+  .wrap{max-width:780px;margin:0 auto}
+  .hero{background:linear-gradient(135deg,#ff6b00 0%,#c04600 100%);padding:28px;border-radius:14px;margin-bottom:24px}
+  .hero h1{margin:0 0 8px;font-size:22px}
+  .hero p{margin:4px 0;font-size:14px;opacity:.95}
+  .meta{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;font-size:13px}
+  .meta span{background:rgba(0,0,0,.25);padding:4px 10px;border-radius:6px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:14px}
+  label.name{display:block;font-weight:600;margin-bottom:8px}
+  input[type=text]{width:100%;padding:10px 12px;background:#0d1117;border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:15px}
+  input[type=text]:focus{outline:none;border-color:var(--brand)}
+  .q{margin-bottom:14px}
+  .q-num{color:var(--brand);font-weight:700;margin-right:6px}
+  .q-text{font-weight:600;margin-bottom:12px;font-size:15px}
+  .opt{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:8px;margin-bottom:6px;cursor:pointer;transition:all .15s;background:#0d1117}
+  .opt:hover{border-color:#3d4651;background:#11181f}
+  .opt input{margin-top:3px;accent-color:var(--brand);cursor:pointer}
+  .opt span{flex:1}
+  .opt.sel{border-color:var(--brand);background:#1f1408}
+  .opt.correct{border-color:var(--good);background:#0d2114}
+  .opt.wrong{border-color:var(--bad);background:#21100d}
+  .opt.reveal-correct{border-color:var(--good)}
+  .explain{margin-top:8px;padding:10px 12px;background:#0d1117;border-left:3px solid var(--brand);border-radius:4px;font-size:13px;color:var(--muted)}
+  .explain b{color:var(--text)}
+  button{font:inherit;cursor:pointer;border:none;padding:14px 28px;border-radius:10px;font-weight:700;font-size:15px;transition:all .15s}
+  .btn-submit{background:var(--brand);color:#fff;width:100%;margin-top:8px}
+  .btn-submit:hover{background:#e85f00}
+  .btn-submit:disabled{background:#4a3520;cursor:not-allowed}
+  .btn-secondary{background:#21262d;color:var(--text);border:1px solid var(--border);padding:10px 18px;font-size:14px;margin-right:8px}
+  .btn-secondary:hover{background:#2d333b}
+  .result{display:none;padding:28px;border-radius:14px;margin-bottom:20px;text-align:center}
+  .result.pass{background:linear-gradient(135deg,#2ea043 0%,#1a6b2b 100%)}
+  .result.fail{background:linear-gradient(135deg,#f85149 0%,#a01d1d 100%)}
+  .result h2{margin:0 0 8px;font-size:28px}
+  .result .score{font-size:48px;font-weight:800;margin:10px 0;letter-spacing:-1px}
+  .result .verdict{font-size:18px;font-weight:600;opacity:.95}
+  .result .who{font-size:14px;margin-top:8px;opacity:.85}
+  .err-banner{background:#3d1a1a;border:1px solid var(--bad);color:#ffb4b0;padding:12px 16px;border-radius:8px;margin-bottom:14px;display:none}
+  .section-head{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin:24px 0 10px;font-weight:700}
+  .tabs{display:flex;gap:8px;margin-bottom:20px}
+  .tab{flex:1;background:#1a2128;border:1px solid var(--border);color:var(--muted);padding:12px 16px;border-radius:10px;font-weight:600;font-size:14px;cursor:pointer;transition:all .15s}
+  .tab:hover:not(.active){background:#21262d;color:var(--text)}
+  .tab.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+  .badge{display:inline-block;background:rgba(0,0,0,.3);padding:2px 9px;border-radius:10px;font-size:12px;margin-left:6px;min-width:22px;text-align:center}
+  .tab.active .badge{background:rgba(255,255,255,.25)}
+  .stats{display:flex;gap:14px;flex-wrap:wrap}
+  .stat{flex:1;min-width:120px;text-align:center;padding:14px;background:#0d1117;border-radius:10px}
+  .stat .num{font-size:28px;font-weight:800;color:var(--brand);display:block;line-height:1.1}
+  .stat .num.good{color:var(--good)} .stat .num.bad{color:var(--bad)}
+  .stat .lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:4px;display:block}
+  table.log{width:100%;border-collapse:collapse;font-size:14px}
+  table.log th{text-align:left;padding:10px 8px;border-bottom:2px solid var(--border);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+  table.log td{padding:10px 8px;border-bottom:1px solid var(--border);vertical-align:middle}
+  table.log tr:hover td{background:#0d1117}
+  table.log td.score{font-weight:700;font-size:15px}
+  .tag-pass{display:inline-block;background:#0d2114;color:#4ec46c;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700;border:1px solid #2ea043}
+  .tag-fail{display:inline-block;background:#21100d;color:#ff8a85;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700;border:1px solid #f85149}
+  .empty{text-align:center;padding:48px 20px;color:var(--muted)}
+  .empty h3{margin:0 0 8px;color:var(--text);font-size:16px}
+  .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  .btn-danger{background:#3d1a1a;color:#ffb4b0;border:1px solid var(--bad);padding:10px 18px;font-size:14px;border-radius:8px;cursor:pointer;font-weight:600}
+  .btn-danger:hover{background:#5a2828}
+  @media print{
+    body{background:#fff;color:#000}
+    .card,.hero,.result{background:#fff !important;color:#000 !important;border:1px solid #ccc}
+    .btn-submit,button{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <h1>Options &amp; moomoo Product Training Exam</h1>
+    <p>20 multiple-choice questions &middot; 5 marks each &middot; 100 marks total</p>
+    <p>Pass mark: <b>80/100</b>. You'll see your answers and the correct ones immediately after submission.</p>
+    <div class="meta">
+      <span>Options &middot; 8</span>
+      <span>moomoo Platform &middot; 4</span>
+      <span>US Market &middot; 4</span>
+      <span>Malaysia Market &middot; 4</span>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="exam">Take Exam</button>
+    <button class="tab" data-tab="results">Results Log <span class="badge" id="logCount">0</span></button>
+  </div>
+
+  <div id="tab-exam">
+
+    <div class="card">
+      <label class="name" for="name">Your name (required)</label>
+      <input type="text" id="name" placeholder="e.g. John Tan" autocomplete="off">
+    </div>
+
+    <div class="err-banner" id="err"></div>
+
+    <div id="result" class="result"></div>
+
+    <form id="exam"></form>
+
+    <button class="btn-submit" id="submit">Submit exam</button>
+
+    <div id="post" style="display:none;margin-top:16px;text-align:center">
+      <button class="btn-secondary" onclick="copyResult()">Copy result summary</button>
+      <button class="btn-secondary" onclick="window.print()">Print / Save PDF</button>
+      <button class="btn-secondary" onclick="location.reload()">Next taker</button>
+    </div>
+
+  </div>
+
+  <div id="tab-results" style="display:none">
+
+    <div class="card">
+      <div class="stats">
+        <div class="stat"><span class="num" id="statTotal">0</span><span class="lbl">Total takers</span></div>
+        <div class="stat"><span class="num good" id="statPass">0</span><span class="lbl">Passed</span></div>
+        <div class="stat"><span class="num bad" id="statFail">0</span><span class="lbl">Failed</span></div>
+        <div class="stat"><span class="num" id="statRate">—</span><span class="lbl">Pass rate</span></div>
+        <div class="stat"><span class="num" id="statAvg">—</span><span class="lbl">Avg score</span></div>
+      </div>
+    </div>
+
+    <div class="card" id="logHost">
+      <div class="empty"><h3>No submissions yet</h3>Results will appear here as people complete the exam on this device.</div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-secondary" onclick="exportCSV()">Export CSV</button>
+      <button class="btn-secondary" onclick="copyAllResults()">Copy all results</button>
+      <button class="btn-danger" onclick="clearLog()">Clear all records</button>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    section: "Options Fundamentals",
+    q: "A call option gives the buyer the right (but not the obligation) to:",
+    options: [
+      "Sell the underlying stock at the strike price",
+      "Buy the underlying stock at the strike price",
+      "Receive dividends from the underlying stock",
+      "Short sell the underlying stock at the strike price"
+    ],
+    answer: 1,
+    explain: "A call gives the buyer the right to BUY the underlying at the strike price before expiry."
+  },
+  {
+    q: "A put option becomes profitable for the buyer (ignoring premium paid) when:",
+    options: [
+      "The stock price rises above the strike price",
+      "The stock price falls below the strike price",
+      "The stock pays a dividend",
+      "Implied volatility decreases sharply"
+    ],
+    answer: 1,
+    explain: "A put gives the right to SELL at the strike; it gains intrinsic value as the stock falls below the strike."
+  },
+  {
+    q: "An 'In-the-Money' (ITM) call option is one where:",
+    options: [
+      "The strike price is above the current stock price",
+      "The strike price equals the current stock price",
+      "The strike price is below the current stock price",
+      "The option has zero time remaining"
+    ],
+    answer: 2,
+    explain: "For calls: ITM = strike < spot. For puts it's the opposite (strike > spot)."
+  },
+  {
+    q: "A client buys 1 call option with a strike of $100, paying $2.00 in premium. At expiry the stock closes at $103. What is the net profit per share (ignoring fees)?",
+    options: [
+      "A loss of $2 per share",
+      "A profit of $1 per share",
+      "A profit of $3 per share",
+      "Breakeven — no profit, no loss"
+    ],
+    answer: 1,
+    explain: "Intrinsic value at expiry = $103 − $100 = $3. Subtract the $2 premium paid → $1 net profit per share. Breakeven would be at $102."
+  },
+  {
+    q: "Your client owns 100 shares of XYZ (cost basis $48) and sold one 30-day $50 covered call for $1.50 premium. At expiry the stock is trading at $55. What happens?",
+    options: [
+      "The call expires worthless; client keeps the shares and the premium",
+      "Shares are assigned and sold at $50; client also keeps the $1.50 premium",
+      "Client must buy 100 shares at $55 to close the position",
+      "The position rolls forward automatically to the next month"
+    ],
+    answer: 1,
+    explain: "$55 > $50 strike, so the call is ITM and gets exercised against the seller. Shares are called away at $50 (not $55). Client realises ($50 − $48) + $1.50 premium = $3.50/share. The trade-off of covered calls: upside is capped above the strike."
+  },
+  {
+    q: "A client likes Apple but thinks $200 is too expensive — they would happily buy at $180. They also want to earn some income while waiting. Which strategy fits best?",
+    options: [
+      "Buy a $180 put option",
+      "Sell a cash-secured put at the $180 strike",
+      "Sell a covered call at $180",
+      "Buy a long straddle at $200"
+    ],
+    answer: 1,
+    explain: "Selling a cash-secured put at $180 collects premium up front. If AAPL falls to $180 by expiry, the client is assigned 100 shares at their target price. If it doesn't, they keep the premium and can repeat. The classic 'get paid to wait' setup."
+  },
+  {
+    q: "A covered call strategy involves:",
+    options: [
+      "Buying a call and selling a put at the same strike",
+      "Selling a call against shares of the underlying you already own",
+      "Buying calls at two different strikes",
+      "Buying a call on borrowed margin"
+    ],
+    answer: 1,
+    explain: "Covered call = long 100 shares + short 1 call. You collect premium; upside is capped at the strike."
+  },
+  {
+    q: "'0DTE' options are options that:",
+    options: [
+      "Have a delta of zero",
+      "Expire on the same trading day",
+      "Have zero intrinsic value",
+      "Are issued by zero-rated counterparties"
+    ],
+    answer: 1,
+    explain: "0DTE = Zero Days To Expiration. Extremely high gamma/theta; a huge share of moomoo's options volume."
+  },
+  {
+    section: "moomoo Platform",
+    q: "A client tells you: 'I work full-time and can't stare at the chart all day. I want my position to auto-exit if it hits my profit target OR my stop-loss.' Which moomoo feature should you recommend?",
+    options: [
+      "Custom Alerts",
+      "Algo Trading Studio",
+      "Advanced Order Types (take-profit / stop-loss / conditional orders)",
+      "Flatten (one-click close all)"
+    ],
+    answer: 2,
+    explain: "Advanced Order Types is designed exactly for this — pre-set TP/SL conditions that the system executes automatically.\n\nWhy the others are wrong (and tempting):\n• Custom Alerts only sends a NOTIFICATION — it doesn't place the trade.\n• Algo Trading Studio automates complex multi-leg strategies; overkill for single-position TP/SL.\n• Flatten is a one-click 'close everything now' button — useful in emergencies but has no conditional trigger."
+  },
+  {
+    q: "A new client has only RM 500 to start, but really wants exposure to high-priced US names like Amazon or Berkshire Hathaway Class A. Which moomoo feature lets her participate?",
+    options: [
+      "IPO subscription",
+      "Margin loan",
+      "Fractional Shares (碎股)",
+      "Strategy Lab"
+    ],
+    answer: 2,
+    explain: "Fractional Shares lets users buy partial shares from as little as $5, opening access to expensive tickers (AMZN, GOOGL, BRK.A) without having to afford a full share. Especially relevant for new investors and students."
+  },
+  {
+    q: "The P&L Simulator's primary value to an options trader is to:",
+    options: [
+      "Auto-execute multi-leg orders with one click",
+      "Visualize the profit/loss curve and IV-change risk BEFORE entering a trade",
+      "Scan the whole market for unusual options activity",
+      "Backtest technical indicator strategies"
+    ],
+    answer: 1,
+    explain: "It previews max loss, breakevens, and how an IV crush would affect the position — kills 'I didn't know it could lose that much' regret."
+  },
+  {
+    q: "What is moomoo's Options Unusual Activity feature?",
+    options: [
+      "A regulatory list of options contracts flagged for suspicious or fraudulent trading",
+      "A real-time scanner that flags abnormal options orders — large sweeps, volume-vs-open-interest spikes, big block trades — to reveal where big money is positioning",
+      "A daily report listing which option contracts expired worthless the previous session",
+      "A backtesting engine that ranks option strategies by historical win rate"
+    ],
+    answer: 1,
+    explain: "Options Unusual Activity is a real-time market scanner. It surfaces abnormal flow — sweep orders, volume far exceeding open interest, large block trades — so traders can see WHERE big / smart money is positioning before the broader market reacts. It's Step 1 of the Options Engine workflow: spot the opportunity early."
+  },
+  {
+    section: "US Market",
+    q: "Regular trading hours for NYSE and Nasdaq are:",
+    options: [
+      "8:00 AM – 5:00 PM ET",
+      "9:30 AM – 4:00 PM ET",
+      "9:00 AM – 4:30 PM ET",
+      "10:00 AM – 4:00 PM ET"
+    ],
+    answer: 1,
+    explain: "US regular session is 9:30 AM – 4:00 PM Eastern Time, Monday to Friday (excluding holidays)."
+  },
+  {
+    q: "The US stock market opens at 9:30 PM Malaysia time during part of the year, but 10:30 PM Malaysia time during another part. Why?",
+    options: [
+      "The NYSE adjusts its trading hours seasonally",
+      "Because of US Daylight Saving Time (DST), which moves US clocks forward 1 hour from mid-March to early November",
+      "Because Malaysia shifts its time zone twice a year",
+      "Because Bursa Malaysia syncs its hours with NYSE on US holidays"
+    ],
+    answer: 1,
+    explain: "NYSE hours are fixed at 9:30 AM – 4:00 PM Eastern, but Eastern switches between EDT (UTC−4, US summer) and EST (UTC−5, US winter). MY is UTC+8 year-round, so: US summer → open 9:30 PM MYT, close 4:00 AM MYT. US winter → open 10:30 PM MYT, close 5:00 AM MYT."
+  },
+  {
+    q: "Most US-listed companies report earnings on what cadence?",
+    options: [
+      "Monthly",
+      "Quarterly",
+      "Semi-annually",
+      "Annually only"
+    ],
+    answer: 1,
+    explain: "US public companies file 10-Q quarterly reports four times a year, then a 10-K annual report — making 'earnings season' a quarterly event."
+  },
+  {
+    q: "The US after-hours trading session typically runs from market close until approximately:",
+    options: [
+      "4:30 PM ET",
+      "6:00 PM ET",
+      "8:00 PM ET",
+      "Midnight ET"
+    ],
+    answer: 2,
+    explain: "Standard after-hours runs 4:00 PM – 8:00 PM ET. moomoo's 5×24 service extends this even further on weekdays."
+  },
+  {
+    section: "Malaysia Market",
+    q: "Bursa Malaysia's regular morning trading session runs approximately:",
+    options: [
+      "8:00 AM – 11:30 AM",
+      "9:00 AM – 12:30 PM",
+      "9:30 AM – 1:00 PM",
+      "10:00 AM – 12:00 PM"
+    ],
+    answer: 1,
+    explain: "Morning session: 9:00 AM – 12:30 PM MYT. Afternoon session resumes 2:30 PM – 5:00 PM MYT."
+  },
+  {
+    q: "The standard board lot size for stocks on Bursa Malaysia is:",
+    options: [
+      "50 shares",
+      "100 shares",
+      "500 shares",
+      "1,000 shares"
+    ],
+    answer: 1,
+    explain: "Bursa Malaysia uses a 100-share board lot. Anything smaller is an 'odd lot' and trades separately."
+  },
+  {
+    q: "The standard cash equity settlement cycle on Bursa Malaysia is:",
+    options: [
+      "T+1 (one business day)",
+      "T+2 (two business days)",
+      "T+3 (three business days)",
+      "Same day (T+0)"
+    ],
+    answer: 1,
+    explain: "Bursa Malaysia operates on T+2 settlement — a trade executed today settles two business days later. (Note: US equities moved to T+1 in May 2024, but Bursa remains T+2.)"
+  },
+  {
+    q: "A Malaysian client calls you at 1:30 PM MYT, frustrated that his Bursa buy order for Public Bank — placed at 12:45 PM — still hasn't filled. What's the most likely explanation?",
+    options: [
+      "The order was rejected because Bursa does not accept orders during the lunch hour",
+      "Bursa Malaysia is currently in its midday break (12:30 PM – 2:30 PM); orders can queue but no matching happens until the afternoon session resumes",
+      "Public Bank only trades during the morning session",
+      "The order needs to be re-submitted after Bursa closes for the day"
+    ],
+    answer: 1,
+    explain: "Bursa Malaysia has a two-session day with a midday break: morning 9:00 AM – 12:30 PM, lunch break 12:30 PM – 2:30 PM, afternoon 2:30 PM – 5:00 PM. Orders placed during the break sit in the queue and are matched once the afternoon session opens — not rejected, just not yet filled."
+  }
+];
+
+// Fisher-Yates shuffle in place so every taker sees a different question order
+for (let i = QUESTIONS.length - 1; i > 0; i--) {
+  const j = Math.floor(Math.random() * (i + 1));
+  [QUESTIONS[i], QUESTIONS[j]] = [QUESTIONS[j], QUESTIONS[i]];
+}
+
+const form = document.getElementById('exam');
+QUESTIONS.forEach((item, idx) => {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.dataset.qid = idx;
+  const qText = document.createElement('div');
+  qText.className = 'q-text';
+  qText.innerHTML = '<span class="q-num">Q' + (idx+1) + '.</span>' + escapeHtml(item.q);
+  card.appendChild(qText);
+  item.options.forEach((opt, oi) => {
+    const lbl = document.createElement('label');
+    lbl.className = 'opt';
+    lbl.innerHTML = '<input type="radio" name="q'+idx+'" value="'+oi+'"><span>'+escapeHtml(opt)+'</span>';
+    lbl.addEventListener('click', () => {
+      card.querySelectorAll('.opt').forEach(o => o.classList.remove('sel'));
+      lbl.classList.add('sel');
+    });
+    card.appendChild(lbl);
+  });
+  form.appendChild(card);
+});
+
+function escapeHtml(s){return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+let submitted = false;
+document.getElementById('submit').addEventListener('click', () => {
+  if (submitted) return;
+  const name = document.getElementById('name').value.trim();
+  const err = document.getElementById('err');
+  if (!name) {
+    err.textContent = 'Please enter your name before submitting.';
+    err.style.display = 'block';
+    window.scrollTo({top:0, behavior:'smooth'});
+    return;
+  }
+  const unanswered = [];
+  QUESTIONS.forEach((_, i) => {
+    if (!document.querySelector('input[name="q'+i+'"]:checked')) unanswered.push(i+1);
+  });
+  if (unanswered.length) {
+    err.textContent = 'You missed question(s): ' + unanswered.join(', ') + '. Please answer every question before submitting.';
+    err.style.display = 'block';
+    const first = document.querySelector('[data-qid="'+(unanswered[0]-1)+'"]');
+    if (first) first.scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+  err.style.display = 'none';
+
+  let correctCount = 0;
+  QUESTIONS.forEach((item, i) => {
+    const card = document.querySelector('[data-qid="'+i+'"]');
+    const picked = parseInt(document.querySelector('input[name="q'+i+'"]:checked').value, 10);
+    const opts = card.querySelectorAll('.opt');
+    opts.forEach(o => { o.classList.remove('sel'); o.querySelector('input').disabled = true; });
+    if (picked === item.answer) {
+      correctCount++;
+      opts[picked].classList.add('correct');
+    } else {
+      opts[picked].classList.add('wrong');
+      opts[item.answer].classList.add('reveal-correct','correct');
+    }
+    const ex = document.createElement('div');
+    ex.className = 'explain';
+    ex.innerHTML = '<b>Correct answer:</b> ' + escapeHtml(item.options[item.answer]) + '<br>' + escapeHtml(item.explain);
+    card.appendChild(ex);
+  });
+
+  const score = correctCount * 5;
+  const pass = score >= 80;
+  const res = document.getElementById('result');
+  res.className = 'result ' + (pass ? 'pass' : 'fail');
+  res.innerHTML =
+    '<div class="who">'+escapeHtml(name)+'</div>' +
+    '<div class="score">'+score+' / 100</div>' +
+    '<div class="verdict">'+(pass ? 'PASS' : 'FAIL')+' &middot; '+correctCount+' of 20 correct</div>' +
+    '<div class="who" style="margin-top:6px">'+(pass ? 'Well done!' : 'Pass mark is 80/100. Review the answers below and try again.')+'</div>';
+  res.style.display = 'block';
+
+  window._examResult = {name, score, correctCount, pass, when: new Date().toISOString()};
+  saveResult(window._examResult);
+
+  document.getElementById('submit').style.display = 'none';
+  document.getElementById('post').style.display = 'block';
+  submitted = true;
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+
+function copyResult(){
+  const r = window._examResult;
+  if (!r) return;
+  const txt = 'Options & moomoo Product Training Exam\n'
+    + 'Name: ' + r.name + '\n'
+    + 'Score: ' + r.score + '/100  (' + r.correctCount + '/20 correct)\n'
+    + 'Result: ' + (r.pass ? 'PASS ✅' : 'FAIL ❌') + '\n'
+    + 'Time: ' + r.when;
+  navigator.clipboard.writeText(txt).then(()=>alert('Result copied to clipboard — paste it in chat to send.'),
+    ()=>alert('Copy failed. Please screenshot the result instead.'));
+}
+
+/* ---------- Results Log (localStorage on this device) ---------- */
+
+const LOG_KEY = 'moomoo_exam_log_v1';
+
+function loadLog(){
+  try { return JSON.parse(localStorage.getItem(LOG_KEY) || '[]'); }
+  catch(e){ return []; }
+}
+function writeLog(arr){
+  localStorage.setItem(LOG_KEY, JSON.stringify(arr));
+}
+function saveResult(r){
+  const arr = loadLog();
+  arr.push(r);
+  writeLog(arr);
+  renderLog();
+}
+function fmtDate(iso){
+  const d = new Date(iso);
+  const pad = n => String(n).padStart(2,'0');
+  return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes());
+}
+function renderLog(){
+  const log = loadLog();
+  document.getElementById('logCount').textContent = log.length;
+
+  const total = log.length;
+  const passed = log.filter(r => r.pass).length;
+  const failed = total - passed;
+  const avg = total ? (log.reduce((s,r)=>s+r.score,0)/total).toFixed(1) : '—';
+  const rate = total ? Math.round((passed/total)*100) + '%' : '—';
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statPass').textContent = passed;
+  document.getElementById('statFail').textContent = failed;
+  document.getElementById('statRate').textContent = rate;
+  document.getElementById('statAvg').textContent = avg;
+
+  const host = document.getElementById('logHost');
+  if (!total){
+    host.innerHTML = '<div class="empty"><h3>No submissions yet</h3>Results will appear here as people complete the exam on this device.</div>';
+    return;
+  }
+  let html = '<table class="log"><thead><tr><th>#</th><th>Name</th><th>Score</th><th>Status</th><th>Date / Time</th></tr></thead><tbody>';
+  log.slice().reverse().forEach((r, i) => {
+    html += '<tr>'
+      + '<td>' + (total - i) + '</td>'
+      + '<td>' + escapeHtml(r.name) + '</td>'
+      + '<td class="score">' + r.score + '<span style="color:var(--muted);font-weight:400">/100</span></td>'
+      + '<td>' + (r.pass ? '<span class="tag-pass">PASS</span>' : '<span class="tag-fail">FAIL</span>') + '</td>'
+      + '<td style="color:var(--muted);font-size:13px">' + fmtDate(r.when) + '</td>'
+      + '</tr>';
+  });
+  html += '</tbody></table>';
+  host.innerHTML = html;
+}
+function exportCSV(){
+  const log = loadLog();
+  if (!log.length) { alert('No records to export yet.'); return; }
+  const rows = [['Name','Score','OutOf','Correct','Total','Status','Timestamp']];
+  log.forEach(r => rows.push([r.name, r.score, 100, r.correctCount, 20, r.pass?'PASS':'FAIL', r.when]));
+  const csv = rows.map(row => row.map(cell => {
+    const s = String(cell);
+    return /[",\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s;
+  }).join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const stamp = new Date().toISOString().replace(/[:T]/g,'-').slice(0,16);
+  a.href = url; a.download = 'exam_results_' + stamp + '.csv';
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+}
+function copyAllResults(){
+  const log = loadLog();
+  if (!log.length) { alert('No records to copy yet.'); return; }
+  let txt = 'Exam Results — ' + log.length + ' submission' + (log.length===1?'':'s') + '\n';
+  txt += 'Pass mark: 80/100\n\n';
+  log.forEach((r, i) => {
+    txt += (i+1) + '. ' + r.name + ' — ' + r.score + '/100 — ' + (r.pass?'PASS':'FAIL') + '  (' + fmtDate(r.when) + ')\n';
+  });
+  navigator.clipboard.writeText(txt).then(
+    ()=>alert('All results copied to clipboard.'),
+    ()=>alert('Copy failed. Use Export CSV instead.')
+  );
+}
+function clearLog(){
+  const log = loadLog();
+  if (!log.length) { alert('Log is already empty.'); return; }
+  if (!confirm('Permanently delete all ' + log.length + ' result(s) from this device? This cannot be undone.')) return;
+  if (!confirm('Are you absolutely sure? Consider exporting CSV first.')) return;
+  writeLog([]);
+  renderLog();
+}
+
+/* ---------- Tab switching ---------- */
+document.querySelectorAll('.tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const target = btn.dataset.tab;
+    document.getElementById('tab-exam').style.display = (target === 'exam') ? '' : 'none';
+    document.getElementById('tab-results').style.display = (target === 'results') ? '' : 'none';
+    if (target === 'results') renderLog();
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+});
+
+renderLog();
+</script>
+</body>
+</html>
