@@ -88,7 +88,7 @@
 
   <div class="hero">
     <h1>moomoo Platform Features Training Exam</h1>
-    <p>20 multiple-choice questions across 5 chapters &middot; 5 marks each &middot; 100 marks total</p>
+    <p>20 multiple-choice questions (randomised) &middot; 5 marks each &middot; 100 marks total</p>
     <p>Pass mark: <b>80/100</b>. You'll see your answers and the correct ones immediately after submission.</p>
     <div class="meta">
       <span>Ch 1 &middot; Smart Tools</span>
@@ -148,14 +148,6 @@
 </div>
 
 <script>
-const CHAPTERS = [
-  { id: 1, title: "Smart Tools & Discovery", subtitle: "Stock Screener, Heatmap, Earnings Calendar, Analyst Ratings" },
-  { id: 2, title: "Conditional Orders & Algo", subtitle: "Conditional triggers, TP/SL preset, extended hours, Algo Trading Studio" },
-  { id: 3, title: "Account Types & Cash Management", subtitle: "Cash vs Margin, Paper Trading, Cash Plus, Pattern Day Trader" },
-  { id: 4, title: "Research & Information Tools", subtitle: "Floating windows, Custom Alerts, News, 牛友圈 Community" },
-  { id: 5, title: "Special Products", subtitle: "IPO subscription, 暗盘 grey market, US Treasuries, crypto exposure" }
-];
-
 const QUESTIONS = [
   // ---------- Chapter 1: Smart Tools & Discovery ----------
   {
@@ -333,20 +325,7 @@ const QUESTIONS = [
     explain: "Custom Alerts send a NOTIFICATION (push, email, or in-app) when a condition is met. They do NOT place any trade — they just inform.\n\nThis is a critical distinction the client needs to grasp:\n• Custom Alert → 'tell me when X happens, I'll decide what to do'\n• Stop order → 'auto-sell when X happens'\n• Conditional order → 'auto-place an order when X happens'\n\nMis-using a Custom Alert as a stop-loss is one of the most common 'I thought you sold me out!' complaints."
   },
   {
-    chapter: 4,
-    q: "On moomoo a client wants news for AAPL only (filtering out general market noise). The relevant feature is:",
-    options: [
-      "Individual-stock news feed on the AAPL detail page / watchlist news subscription",
-      "牛友圈 / Community",
-      "Heatmap",
-      "Floating window"
-    ],
-    answer: 0,
-    explain: "Every stock's detail page has a per-symbol news feed pulling from major wire services (Reuters, Bloomberg, MarketWatch, Benzinga, etc.). Add the stock to a watchlist and you can also have 'watchlist news' surfaced together — still per-symbol filtered, just multi-stock.\n\nFor regulated material news (filings, earnings releases), moomoo also tags items by importance so clients can filter out non-material chatter."
-  },
-  {
-    chapter: 4,
-    q: "moomoo's 牛友圈 (Trading Floor / Community) is primarily:",
+    q: "moomoo's 牛友圈 (moomoo Community) is primarily:",
     options: [
       "A regulated investment-advice service backed by moomoo's compliance team",
       "A social feed where users post trades, ideas, and discussion — informational and user-generated, NOT regulated advice",
@@ -354,94 +333,96 @@ const QUESTIONS = [
       "A paid premium feature requiring an account-tier upgrade"
     ],
     answer: 1,
-    explain: "牛友圈 / Trading Floor is moomoo's user community — think Twitter/X for traders, hosted in-app. Users post their setups, screenshots, opinions, and chat. moomoo also has some sponsored 'KOLs' or featured contributors, but everything posted is USER-GENERATED CONTENT, not regulated advice.\n\nWhen handling client questions, important reminders:\n• Posts there are NOT moomoo's recommendation.\n• Posters may be talking their book.\n• Clients chasing 'community winners' often arrive late."
+    explain: "牛友圈 is moomoo's user community — think Twitter/X for traders, hosted in-app. Users post their setups, screenshots, opinions, and chat. moomoo also has some sponsored 'KOLs' or featured contributors, but everything posted is USER-GENERATED CONTENT, not regulated advice.\n\nWhen handling client questions, important reminders:\n• Posts there are NOT moomoo's recommendation.\n• Posters may be talking their book.\n• Clients chasing 'community winners' often arrive late."
   },
 
-  // ---------- Chapter 5: Special Products ----------
+  // ---------- Chapter 5: Bursa Malaysia IPO Subscription ----------
   {
     chapter: 5,
-    q: "A Malaysian client wants to subscribe to a HK IPO via moomoo using CASH (not margin) financing. Which is TRUE about the subscription cash?",
+    q: "A Malaysian client asks how to subscribe to an upcoming Bursa Malaysia IPO using his moomoo MY account. The correct channel is:",
     options: [
-      "Subscription cash is debited immediately and frozen until allotment results are released",
-      "Cash is only debited from the account if the client is ultimately allotted shares",
-      "Cash earns money-market interest while frozen for the subscription window",
-      "The cash is wired directly to the issuing company's bank account"
+      "Walk into a bank branch to fill paper subscription forms",
+      "Call the issuing company's listing agent directly",
+      "Apply in-app through moomoo MY's IPO subscription module (the subscription is tied to the client's CDS sub-account maintained by moomoo MY)",
+      "moomoo MY only handles secondary-market trading; IPO subscription must be done through a separate bank ATM / online banking"
+    ],
+    answer: 2,
+    explain: "moomoo MY (the Malaysian licensed entity) supports Bursa IPO subscription directly inside the app. The client navigates to the IPO calendar / 新股中心, selects the live IPO, enters the application quantity, and confirms — the application is submitted under the CDS sub-account that moomoo MY maintains on the client's behalf.\n\nAlternative MY channels (bank ATM, internet banking, Bursa Anywhere) exist but are SEPARATE from moomoo and not part of the moomoo MY workflow. From the bot/agent's perspective: keep the client inside the moomoo app — no need to redirect to a bank.\n\nNote on scope: moomoo MY supports MY (Bursa) IPO subscription. HK / US IPO subscription is NOT offered to MY clients (those are available through other moomoo group entities like Futubull HK / moomoo US)."
+  },
+  {
+    chapter: 5,
+    q: "When a Malaysian client subscribes to a Bursa IPO through moomoo MY using cash, the subscription cash is:",
+    options: [
+      "Debited immediately at application and refunded after allotment results if the client is partially allotted or not allotted",
+      "Debited only after the client is confirmed allotted",
+      "Held by the issuing company directly until listing day",
+      "Earns money-market interest in a Cash Plus pool while frozen during the subscription window"
     ],
     answer: 0,
-    explain: "Standard mechanic for cash IPO subscriptions:\n1. Subscribe → cash is debited (or frozen) IMMEDIATELY for the full subscription amount.\n2. Wait for the allotment date — usually 5–7 business days.\n3. If allotted partially or not at all, the unused cash is REFUNDED back to the account.\n\nDuring the freeze window the cash earns nothing — that's the opportunity cost of subscribing. Margin IPO financing partly addresses this (you only put up a fraction; broker lends the rest, charging interest only on the loan portion)."
+    explain: "Standard mechanic for Bursa IPO cash subscriptions through moomoo MY:\n1. Submit application → full subscription amount is DEBITED (or frozen) from the trading account immediately.\n2. Wait for the allotment date — typically 5–10 business days after the closing of the application period.\n3. If allotted in full, the cash stays paid and shares are credited.\n4. If allotted partially or not at all, the unused cash is REFUNDED back to the moomoo MY account.\n\nDuring the freeze window the cash earns nothing — that's the opportunity cost of subscribing. The Cash Plus product (idle-cash yield) does NOT apply to cash that's already committed/frozen against an IPO application."
   },
   {
     chapter: 5,
-    q: "For HK IPOs, 暗盘 (dark pool / grey-market) trading lets clients:",
+    q: "For a Bursa Malaysia IPO subscribed via moomoo MY, the allotted shares are credited to:",
     options: [
-      "Trade the new IPO anonymously on the regular HKEX exchange the morning before listing",
-      "Trade the new IPO in an OFF-EXCHANGE evening session the DAY BEFORE official listing (T−1), typically 4:15 PM – 6:30 PM HKT, via participating brokers",
-      "Trade pre-IPO equity in private unlisted companies",
-      "Receive a free starter allocation of the IPO as a moomoo loyalty bonus"
+      "A US brokerage sub-account at moomoo's US custodian",
+      "The client's CDS (Central Depository System / Bursa Malaysia Depository) sub-account that moomoo MY maintains for them",
+      "A physical share certificate mailed to the client's home address",
+      "The HKEX CCASS depository"
     ],
     answer: 1,
-    explain: "HK 暗盘 is a unique pre-listing trading session run by brokers (including moomoo and Futubull) the evening before the IPO officially lists on HKEX. Operates roughly 4:15 PM – 6:30 PM HKT on T−1. Participants are restricted to clients who got allotted shares + those willing to trade them via the broker's own dark pool.\n\nUsed mostly by:\n• Allotted holders wanting to flip at the day-before price.\n• Speculators wanting an early price discovery before the official open.\n\nPrices in 暗盘 are often a strong signal for the listing-day open, but liquidity is thinner than the regular session."
+    explain: "Bursa Malaysia uses a fully scripless depository system — the Central Depository System (CDS) operated by Bursa Malaysia Depository. Every Malaysian investor needs a CDS account to hold listed shares.\n\nmoomoo MY (as a Bursa participating organisation) opens and maintains a CDS sub-account on behalf of each client. When a Bursa IPO subscription is allotted:\n• Shares are credited to that CDS sub-account before the listing day.\n• Clients can see the allotted holdings inside moomoo MY's portfolio view from the credit date.\n• On listing day, those holdings become tradeable on Bursa straight from moomoo MY.\n\nDistinct from HK (CCASS) and US (DTC) custody — those apply to HK and US holdings, not MY shares."
   },
   {
-    chapter: 5,
-    q: "A conservative client wants 'short-term low-risk USD yield, backed by the US government'. The most direct moomoo product:",
-    options: [
-      "A high-yield corporate bond ETF",
-      "US Treasury bills / notes (国债 / T-bills) — direct purchase via moomoo's bond / fixed-income product",
-      "A meme-stock unusual-options play",
-      "A 3x-leveraged equity ETF"
-    ],
-    answer: 1,
-    explain: "moomoo offers direct purchase of US Treasury securities (T-bills 4-week / 13-week / 26-week / 52-week, and longer-tenor notes/bonds). Yields are auction-determined and are backed by the full faith and credit of the US government — the textbook 'risk-free' rate.\n\nGood fit for clients who want:\n• A cash-equivalent yield (often higher than savings deposits).\n• Predictable maturity / known total return.\n• Zero credit risk concerns.\n\nDistinct from a corporate bond ETF — those have credit risk and intraday price volatility. Distinct from money-market funds — Treasuries are direct holdings of government debt, not a managed fund."
-  },
-  {
-    chapter: 5,
-    q: "A client asks whether he can trade Bitcoin directly via his moomoo securities account (in Malaysia). The accurate answer is:",
+    q: "A Malaysian client asks whether he can trade Bitcoin directly through his moomoo MY securities account. The accurate answer is:",
     options: [
       "Yes — stocks and crypto trade together from the same securities account",
-      "Direct CRYPTO trading is NOT offered through the moomoo securities account in MY; clients CAN, however, gain crypto exposure via US-listed crypto-related stocks/ETFs (e.g. IBIT, COIN, MSTR, MARA)",
+      "Direct spot crypto trading is NOT offered through the moomoo MY securities account; clients CAN, however, gain crypto EXPOSURE via US-listed crypto-related stocks and ETFs (e.g. IBIT, COIN, MSTR, MARA)",
       "Crypto can only be traded via the moomoo physical debit card",
-      "Crypto holdings are auto-bundled into the Cash Plus / sweep product"
+      "Crypto holdings are auto-bundled into the Cash Plus product"
     ],
     answer: 1,
-    explain: "moomoo's MY-licensed securities entity does NOT offer direct spot crypto. Clients wanting crypto exposure go via the secondary route: US-listed crypto-adjacent equities and ETFs that already trade on the moomoo platform — these include:\n• IBIT, FBTC — spot Bitcoin ETFs\n• ETHE, ETH — spot Ether ETFs\n• COIN — Coinbase (crypto exchange operator)\n• MSTR — MicroStrategy (a BTC treasury proxy)\n• MARA, RIOT, CLSK — Bitcoin miners\n\nNote the jurisdiction caveat: some other moomoo entities (e.g. Futubull HK with the Bullguard licence) do offer direct crypto. Always confirm by client's account jurisdiction before answering."
+    explain: "moomoo MY's licensed securities entity does NOT offer direct spot crypto. Clients wanting crypto exposure go via the SECONDARY route: US-listed crypto-adjacent equities and ETFs that already trade on the moomoo platform — these include:\n• IBIT, FBTC — spot Bitcoin ETFs\n• ETHE, ETH — spot Ether ETFs\n• COIN — Coinbase (crypto exchange operator)\n• MSTR — MicroStrategy (a BTC treasury proxy)\n• MARA, RIOT, CLSK — Bitcoin miners\n\nNote the jurisdiction caveat: some OTHER moomoo group entities (e.g. Futubull HK with the relevant licence) do offer direct crypto. Always confirm by the client's account jurisdiction before answering."
+  },
+  {
+    q: "A moomoo MY client wants 'Bitcoin price exposure without holding the coin itself'. Which is the most ACCURATE description of his options?",
+    options: [
+      "Spot Bitcoin ETFs (e.g. IBIT, FBTC) track BTC price closely (minus fees), while crypto-related equities like COIN / MSTR / MARA also give exposure but carry their own business risk and may diverge sharply from BTC's price",
+      "Only Bitcoin futures on CME — moomoo MY doesn't offer any other crypto-linked product",
+      "Only stablecoins like USDT and USDC — exchange-listed BTC ETFs aren't available to MY clients",
+      "There is no crypto-linked exposure of any kind available to moomoo MY clients"
+    ],
+    answer: 0,
+    explain: "moomoo MY clients can trade ANY US-listed security available on the platform — that includes:\n• SPOT BITCOIN ETFs (IBIT, FBTC, ARKB, BITB): these hold actual BTC and track its price minus an expense ratio. Closest 'pure' exposure available without direct custody.\n• CRYPTO-RELATED EQUITIES (COIN, MSTR, MARA, RIOT, CLSK): these are real companies with their own business performance, employees, debt, etc. Their stock prices are correlated with BTC but can diverge significantly — e.g. MSTR's premium-to-NAV swings, COIN's earnings cycle, miner cost-of-production economics.\n\nClient expectation-setting:\n• If they want pure BTC price tracking → ETF.\n• If they want leveraged-style exposure to BTC sentiment → equities (but accept higher volatility and idiosyncratic risk).\n• No direct spot crypto, no stablecoins, no futures through moomoo MY's securities account."
   }
 ];
 
-// Render: group by chapter, render chapter heading + each question in declared order
+// Fisher-Yates shuffle: every taker sees questions in a different order
+for (let i = QUESTIONS.length - 1; i > 0; i--) {
+  const j = Math.floor(Math.random() * (i + 1));
+  [QUESTIONS[i], QUESTIONS[j]] = [QUESTIONS[j], QUESTIONS[i]];
+}
+
 const form = document.getElementById('exam');
-
-let qIdx = 0;
-CHAPTERS.forEach(ch => {
-  const chQs = QUESTIONS.filter(q => q.chapter === ch.id);
-  const head = document.createElement('div');
-  head.className = 'chapter-head';
-  head.innerHTML = '<span class="chapter-tag">Chapter ' + ch.id + '</span>'
-                 + '<div class="chapter-title">' + escapeHtml(ch.title) + '</div>'
-                 + '<div class="chapter-meta">' + escapeHtml(ch.subtitle) + ' &middot; ' + chQs.length + ' questions</div>';
-  form.appendChild(head);
-
-  chQs.forEach(item => {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.dataset.qid = qIdx;
-    const qText = document.createElement('div');
-    qText.className = 'q-text';
-    qText.innerHTML = '<span class="q-num">Q' + (qIdx+1) + '.</span>' + escapeHtml(item.q);
-    card.appendChild(qText);
-    item.options.forEach((opt, oi) => {
-      const lbl = document.createElement('label');
-      lbl.className = 'opt';
-      lbl.innerHTML = '<input type="radio" name="q'+qIdx+'" value="'+oi+'"><span>'+escapeHtml(opt)+'</span>';
-      lbl.addEventListener('click', () => {
-        card.querySelectorAll('.opt').forEach(o => o.classList.remove('sel'));
-        lbl.classList.add('sel');
-      });
-      card.appendChild(lbl);
+QUESTIONS.forEach((item, idx) => {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.dataset.qid = idx;
+  const qText = document.createElement('div');
+  qText.className = 'q-text';
+  qText.innerHTML = '<span class="q-num">Q' + (idx+1) + '.</span>' + escapeHtml(item.q);
+  card.appendChild(qText);
+  item.options.forEach((opt, oi) => {
+    const lbl = document.createElement('label');
+    lbl.className = 'opt';
+    lbl.innerHTML = '<input type="radio" name="q'+idx+'" value="'+oi+'"><span>'+escapeHtml(opt)+'</span>';
+    lbl.addEventListener('click', () => {
+      card.querySelectorAll('.opt').forEach(o => o.classList.remove('sel'));
+      lbl.classList.add('sel');
     });
-    form.appendChild(card);
-    qIdx++;
+    card.appendChild(lbl);
   });
+  form.appendChild(card);
 });
 
 function escapeHtml(s){return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
