@@ -252,7 +252,7 @@ const QUESTIONS = [
   // ---------- Chapter 3: Account Types & Cash Management ----------
   {
     chapter: 3,
-    q: "Which capability is available ONLY in a margin account, not in a cash account?",
+    q: "On moomoo MY (which uses a single Universal account), which capability requires the margin feature to be activated, rather than being available by default?",
     options: [
       "Buying US-listed stocks",
       "Holding USD currency in the account",
@@ -260,7 +260,7 @@ const QUESTIONS = [
       "Receiving dividends on holdings"
     ],
     answer: 2,
-    explain: "Short selling requires borrowing shares from a securities lender — only the margin account is wired up for that borrow facility. A cash account is purely long-only.\n\nOther margin-only features worth knowing:\n• Buying on leverage (using a margin loan to buy more than your cash).\n• Trading on UNSETTLED funds (in cash accounts, you must wait T+1 for sale proceeds to settle before reusing them, or risk a 'good faith violation').\n• Some advanced options strategies (uncovered calls, spreads with high margin requirement)."
+    explain: "moomoo MY does not split clients into separate 'cash' and 'margin' accounts the way US/SG brokers do — every MY client has one Universal account, and the margin feature is an opt-in capability layered on top.\n\nShort selling requires borrowing shares from a securities lender, so it only works once the margin feature is enabled — the Universal account in its default (non-margin) state is long-only.\n\nOther capabilities that need the margin feature:\n• Buying on leverage (using a margin loan to buy more than your cash).\n• Some advanced options strategies (uncovered calls, spreads with high margin requirement).\n\nBuying US stocks, holding USD, and receiving dividends are all available without margin — they're standard Universal-account features."
   },
   {
     chapter: 3,
@@ -276,15 +276,15 @@ const QUESTIONS = [
   },
   {
     chapter: 3,
-    q: "A client has idle USD sweeping into Cash Plus / 余额宝-style. He's about to place a buy order — will the cash be available?",
+    q: "A Malaysian client on moomoo MY has idle MYR cash and wants it to earn yield via Cash Plus while still being able to trade. Which statement most accurately describes Cash Plus on moomoo MY?",
     options: [
-      "No, he must wait T+1 to redeem the Cash Plus units first",
-      "Yes — the system auto-redeems the needed Cash Plus units at the moment of trade; the swept cash counts as available buying power",
-      "Only for ETF orders; stock orders require manual redemption",
-      "Only after 9:30 AM ET regardless of trade currency"
+      "Cash Plus auto-sweeps idle USD into a money-market fund and auto-redeems the instant any buy order is placed",
+      "Cash Plus on moomoo MY refers to three approved MYR money-market funds — Maybank Retail Money Market I-Fund, United Money Market Funds (Class R), and Eastspring Investment Islamic Income Fund (Class R). The client can subscribe manually or enable the optional Smartsave add-on, where Smartsave-Buy auto-invests idle cash and Smartsave-Redemption converts up to 95% of the fund holding back into Buying Power",
+      "Cash Plus accepts MYR, USD and SGD interchangeably and pays a single fixed APY across all three currencies",
+      "Cash Plus is only usable for Bursa IPO subscriptions; it cannot be used to fund secondary-market trades"
     ],
     answer: 1,
-    explain: "The whole design of brokerage cash-sweep products is that the swept cash remains FUNCTIONALLY LIQUID. When you submit a buy order, the system redeems just enough sweep units (typically same-day, often instantly) to fund the trade. The client doesn't need to manually un-sweep.\n\nIf a client experiences a delay or rejection, the usual cause is a holiday in the underlying money-market fund's calendar, or the order being placed in an exotic currency that the sweep isn't denominated in."
+    explain: "On moomoo MY, Cash Plus IS the three approved MYR money-market funds themselves:\n• Maybank Retail Money Market I-Fund\n• United Money Market Funds — Class R\n• Eastspring Investment Islamic Income Fund — Class R\n\nThere are two ways to put money into Cash Plus:\n1. Manual purchase / subscription — the client picks a fund and subscribes themselves.\n2. Smartsave-Buy (optional add-on) — auto-invests idle MYR cash into the selected fund.\n\nSmartsave is a SEPARATE, optional feature layered on top of Cash Plus. Smartsave-Redemption (the other half of the add-on) converts up to 95% of the parked fund value back into Buying Power so the order can fill. The 5% buffer is the standard NAV/settlement haircut — that slice is NOT instantly tradable.\n\nWhy the others are wrong:\n• USD sweep with auto-redeem-on-trade — that's moomoo US / moomoo SG behaviour, NOT MY.\n• Multi-currency single APY — each fund has its own NAV and yield; MYR only.\n• IPO-only — Cash Plus and Bursa IPO subscriptions are separate products."
   },
   {
     chapter: 3,
