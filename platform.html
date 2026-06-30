@@ -288,15 +288,15 @@ const QUESTIONS = [
   },
   {
     chapter: 3,
-    q: "The US 'Pattern Day Trader' (PDT) rule, enforced by all US brokers including moomoo, applies when:",
+    q: "A moomoo MY client buys USD 10,000 of Apple (AAPL) and receives a USD 100 ordinary cash dividend. How much US withholding tax (WHT) is deducted at source, and what arrives in the client's Universal account?",
     options: [
-      "A client holds positions overnight for 5+ consecutive trading days",
-      "A client executes 4+ day-trades (open AND close same stock same day) within 5 business days in a MARGIN account with equity under USD 25,000",
-      "A client trades only in the pre-market session",
-      "A client uses options instead of stocks"
+      "15% — the standard US treaty rate applies; client receives USD 85",
+      "30% — Malaysia has no income-tax treaty with the US for portfolio dividends; client receives USD 70",
+      "0% — foreign retail clients are exempt; client receives the full USD 100 and files their own US return",
+      "10% — moomoo MY applies a flat 10% MY-side levy regardless of the underlying market"
     ],
     answer: 1,
-    explain: "PDT is a FINRA rule: 4 or more day-trades in 5 business days in a margin account WHERE equity is below $25,000 = flagged. Once flagged, the account is restricted to no day-trades until equity is restored above $25k, or until the flag is reset (typically once per 180 days at broker's discretion).\n\nKey teaching points:\n• Only MARGIN accounts. Cash accounts can day-trade freely but are limited by T+1 settlement.\n• Counts ROUND-TRIPS — buy-then-sell or sell-short-then-buy-back, same symbol, same day.\n• Equity is measured at PRIOR-DAY CLOSE; mid-day fluctuations don't trigger PDT."
+    explain: "There is NO US–Malaysia income-tax treaty covering portfolio (cash) dividends, so the default US statutory withholding rate of 30% applies in full — moomoo, as the US-side broker, deducts it at source before the cash hits the client's MY Universal account. On a USD 100 dividend, USD 30 is withheld and USD 70 arrives.\n\nWhy the others are wrong:\n• 15% — that's the typical TREATY rate (Singapore, UK, etc.). Malaysia is NOT on the US treaty list for this purpose.\n• 0% — non-resident foreigners are NOT exempt from US dividend WHT; the W-8BEN form does not eliminate it, it only confirms non-US status so the correct treaty/statutory rate applies.\n• 10% MY-side levy — moomoo MY does not impose its own dividend tax; the deduction is purely US-side WHT.\n\nPractical teaching point: when an MY client compares 'why did my friend in Singapore get more dividend than me on the same stock?', the answer is treaty access. Set the expectation up-front so the client doesn't think moomoo is short-paying them."
   },
 
   // ---------- Chapter 4: Research & Information Tools ----------
