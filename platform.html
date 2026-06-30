@@ -252,7 +252,7 @@ const QUESTIONS = [
   // ---------- Chapter 3: Account Types & Cash Management ----------
   {
     chapter: 3,
-    q: "On moomoo MY (which uses a single Universal account), which capability requires the margin feature to be activated, rather than being available by default?",
+    q: "On moomoo MY (which uses a single Universal account, with the margin feature enabled by default for eligible clients — i.e. non-student / non-unemployed), which of the following is available ONLY when the margin feature is active?",
     options: [
       "Buying US-listed stocks",
       "Holding USD currency in the account",
@@ -260,7 +260,7 @@ const QUESTIONS = [
       "Receiving dividends on holdings"
     ],
     answer: 2,
-    explain: "moomoo MY does not split clients into separate 'cash' and 'margin' accounts the way US/SG brokers do — every MY client has one Universal account, and the margin feature is an opt-in capability layered on top.\n\nShort selling requires borrowing shares from a securities lender, so it only works once the margin feature is enabled — the Universal account in its default (non-margin) state is long-only.\n\nOther capabilities that need the margin feature:\n• Buying on leverage (using a margin loan to buy more than your cash).\n• Some advanced options strategies (uncovered calls, spreads with high margin requirement).\n\nBuying US stocks, holding USD, and receiving dividends are all available without margin — they're standard Universal-account features."
+    explain: "moomoo MY uses a single Universal account — there is no separate 'cash' vs 'margin' account. The margin feature is enabled by default for eligible clients (typically employed adults); only certain segments such as students or unemployed applicants start without it. So the right question isn't 'is margin activated?' but 'which capability NEEDS the margin feature to work?'\n\nShort selling needs the margin feature: it requires borrowing shares from a securities lender, which the platform only allows when the margin facility is live on the account. Without margin, the Universal account is long-only.\n\nOther capabilities that also depend on the margin feature:\n• Buying on leverage (using a margin loan to buy more than your cash).\n• Some advanced options strategies (uncovered calls, spreads with high margin requirement).\n\nBuying US stocks, holding USD, and receiving dividends are all standard Universal-account features — they do NOT require margin."
   },
   {
     chapter: 3,
